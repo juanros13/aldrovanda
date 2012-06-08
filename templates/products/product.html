@@ -1,0 +1,57 @@
+{% extends "products/base.html" %}
+
+{% block title %}Aldrovanda - {{ product.name }}{% endblock %}
+
+{% block body %}
+
+
+<div class="container">
+  <div class="row">
+    <div class="span9">
+      <h1>{{ product.name }}</h1>
+      {% load category_tags %}
+      {% display_path_as_ul category_list %}
+      <a href="/categoria/{{ category_list.parent.slug }}">
+            {{ category_list }}
+        </a></h2>
+      <ul>
+          {% for parent in category_list.ancestors %}
+          <li><a href="/categoria/{{ parent.get_absolute_url }}">{{ parent.name }}</a></li>
+          {% endfor %}
+      </ul>
+      {% load thumbnail %}
+      <div class="row-fluid">
+        <div class="span10">
+        {% for image in product.image_set.all %}
+        {% if image.default %}
+          <a href="{{ MEDIA_URL }}{{image.image}}" title="{{ product.description }}">
+            <img class="img_sorce" src="{% thumbnail image.image 600x600 crop %}" width="{{image.width }}" height="{{ image.height }}" />
+          </a>
+        {% endif%}
+        {% endfor %}
+        </div>
+        <div class="span2">	
+          <ul class="thumbnails">
+          {% for image in product.image_set.all %}
+            <li>
+              <a href="#" class="thumbnail" title="{{ product.description }}">
+                <img rel="{% thumbnail image.image 600x600 crop %}" class="img_thumbnail" src="{% thumbnail image.image 120x120 crop %}" width="{{image.width }}" height="{{ image.height }}" />
+              </a>
+            </li>
+          {% endfor %}
+          </ul>
+        </div>
+      </div>	
+      <p>{{ product.description }}</p>
+    </div><!--/span-->
+    <div class="span3">
+      <h2>&#36;{{ product.price }}</h2>
+      <a class="btn btn-success btn-large" href="#">
+        <i class="icon-shopping-cart icon-white"></i>
+          <span class="button_line"></span>
+          Checkout
+      </a>
+    </div><!--/span-->
+  </div><!--/row-->
+</div><!--/container-->
+{% endblock %}
