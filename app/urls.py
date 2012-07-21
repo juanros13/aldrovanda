@@ -17,9 +17,16 @@ urlpatterns = patterns('',
     url(r'^$', 'aldrovanda.views.index'),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^productos/', include('aldrovanda.urls')),
+    url(r'^login/', 'aldrovanda.views.login'),
+    url(r'^register/', 'aldrovanda.views.register'),
+    url(r'^testForm/', 'aldrovanda.views.test'),
+    url(r'^logout/', 'aldrovanda.views.disconnect'),
+    url(r'^logout/', 'aldrovanda.views.disconnect'),
+    url(r'^tienda/(?P<username>\w+)/$', 'aldrovanda.views.shop'),
+    #url(r'^register/', 'aldrovanda.views.register'),
     #url(r'^categoria/(?P<category_slug>.+?)/?$', 'aldrovanda.views.category'),
     #url(r'^categoria/(?P<category_parent>.+?)/(?P<category_slug>.+?)/?$', 'aldrovanda.views.category_lala')
-    url(r'^categoria/(?P<hierarchy>[-/\w]+)/$', 'aldrovanda.views.category'),
+    url(r'^(?P<full_slug>[-\w/]+)/$', 'aldrovanda.views.category'),
 
 )+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

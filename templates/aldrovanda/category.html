@@ -1,0 +1,85 @@
+{% extends "aldrovanda/base.html" %}
+
+{% block title %}Aldrovanda - {{ current_category.name }}{% endblock %}
+
+{% block body %}
+<div class="container">
+	<div class="row">
+		<div class="span9">
+      {{ level }}
+			<ul class="breadcrumb">
+        <li>
+        {% for cat in category.get_ancestors %}
+          <a href="{{ cat.get_absolute_url }}">
+          {{ cat.name }}
+          </a>
+          <span class="separator">&rsaquo;</span> 
+        {% endfor %}
+        </li>
+        <li>
+          <a href="{{ category.get_absolute_url }}">
+          {{category.name}}
+          </a>
+        </li>
+      </ul>
+      <div class="row">
+      {% load thumbnail %}
+      {% for product in products_list %}
+        <div class="span3">
+        {% for image in product.image_set.all %}
+        {% if image.default %}
+          <a href="{{ product.get_absolute_url }}" class="thumbnail" title="{{ product.description }}">
+            <img src="{% thumbnail image.image 150x150 crop %}" width="150" height="150" />
+          </a>
+        {% endif%}
+        {% endfor %}
+          <div class="listing-detail">
+            <h2>
+              <a class="listing-title" href="{{ product.get_absolute_url }}" title="{{ product.name }}" >
+              {{ product.name|truncatechars:20 }}
+              </a>
+            </h2>
+            <div class="listing-price">
+              <span class="currency-symbol">&euro;</span>{{ product.price }}<span class="currency-code">EUR</span>
+            </div>
+          </div>	
+        </div><!--/span -->
+      {% endfor %}
+      </div><!--/row -->
+		</div><!--/span-->
+		<div class="span3">
+			<div class="well sidebar-nav">
+				<ul class="nav nav-list">
+					<li class="nav-header">
+							{{ category.get_root }}
+					</li>
+					{% for cat in categories_sibling %}
+						{% if cat.slug == category.parent.slug or cat.slug == category.slug %}
+						<li {% if cat.slug == category.slug %}class="active"{% endif %}>
+							<a href="{{ cat.get_absolute_url }}">{{cat.name}}</a>
+						</li>
+							{% if cat.children.count %}
+							<li>	
+								<ul class="nav nav-list">
+									{% for child in cat.children.all %}
+									<li {% if child.slug == category.slug %}class="active"{% endif %}>
+										<a href="{{ child.get_absolute_url }}">{{ child }}</a>
+									</li>
+									{% endfor %}
+								</ul>
+							</li>	
+							{% endif %}
+						{% else %}	
+						<li>
+							<a href="{{cat.get_absolute_url}}">{{cat.name}}</a>
+						</li>
+						{% endif %}
+
+						
+					{% endfor %}
+				</ul>
+			</div><!--/.well -->
+		</div><!--/span-->
+	</div><!--/row-->
+</div><!--/container-->
+{% endblock %}

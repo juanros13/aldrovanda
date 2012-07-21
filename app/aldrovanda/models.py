@@ -2,15 +2,39 @@ from django.db import models
 from easy_thumbnails.fields import ThumbnailerImageField
 from django.forms import ModelForm
 from django.contrib import admin
+from django.contrib.auth.models import User
 from django.conf import settings
 from easy_thumbnails.files import get_thumbnailer
-from categories.models import CategoryBase
+from mptt.models import MPTTModel, TreeForeignKey
 
-class Category(CategoryBase):
-   def get_absolute_url(self):
-        return str(self.id)
-   class Meta:
-        verbose_name_plural = 'Categorias'
+
+
+class Category(MPTTModel):
+	name = models.CharField(max_length=200)
+	slug = models.SlugField()
+	description = models.TextField(blank=True,help_text="Optional")
+	parent = TreeForeignKey('self', null=True, blank=True, related_name='children')
+	full_slug = models.CharField(max_length=255, blank=True)
+	class Meta:
+		verbose_name = 'Categoria'
+		verbose_name_plural = 'Categorias'
+		
+	def save(self, *args, **kwargs):
+		orig_full_slug = self.full_slug
+		if self.parent:
+		    self.full_slug = "%s%s/" % (self.parent.full_slug, self.slug)
+		else:
+		    self.full_slug = "%s/" % self.slug
+		obj = super(Category, self).save(*args, **kwargs)
+		if orig_full_slug != self.full_slug:
+		    for child in self.get_children():
+		        child.save()
+		return obj
+	
+	def get_absolute_url(self):
+		 return '/categoria/%s' % (self.full_slug)
+	def __unicode__(self):
+		return self.name
 
 class Product(models.Model):
 	name = models.CharField(
@@ -36,6 +60,9 @@ class Product(models.Model):
 		default = 5
 	)
 	category = models.ForeignKey(Category)
+	user = models.ForeignKey(User, default = None, blank=False, null=False)
+	def get_absolute_url(self):
+		return "/productos/%s/" % self.id
 	def admin_image(self):
 		#return '<img src="../../..'+settings.STATIC_URL+'%s"/>' % self.image_set.get(default=True).image
 		image_path=self.image_set.get(default=True).image

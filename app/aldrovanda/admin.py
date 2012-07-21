@@ -2,7 +2,7 @@ from aldrovanda.models import Product, Image, Category
 from django.contrib import admin
 from django.forms import ModelForm
 from django import forms
-from categories.admin import CategoryBaseAdmin
+from mptt.admin import MPTTModelAdmin
 
 class ImageInline(admin.StackedInline):
 	model = Image
@@ -13,9 +13,9 @@ class ProductAdmin(admin.ModelAdmin):
 	list_filter = ['creation_date']
 	inlines = [ImageInline]
 
-class CategoryAdmin(CategoryBaseAdmin):
-	pass
+#class CategoryAdmin(CategoryBaseAdmin):
+#	pass
 
 admin.site.register(Product, ProductAdmin)
-admin.site.register(Category, CategoryAdmin)
+admin.site.register(Category, MPTTModelAdmin)
 #admin.site.register(Image)

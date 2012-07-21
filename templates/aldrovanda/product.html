@@ -1,0 +1,72 @@
+{% extends "aldrovanda/base.html" %}
+
+{% block title %}{{ product.name }} - {{ product.description }}{% endblock %}
+
+{% block body %}
+{% load mptt_tags %}
+
+<div class="container">
+  <div class="row">
+    <div class="span8">
+      <h1>{{ product.name }}</h1>
+      <ul class="breadcrumb">
+        <li>
+        {% for cat in category.get_ancestors %}
+          <a href="{{ cat.get_absolute_url }}">
+          {{ cat.name }}
+          </a>
+          <span class="separator">&rsaquo;</span> 
+        {% endfor %}
+        </li>
+        <li>
+          <a href="{{ category.get_absolute_url}}">
+          {{category.name}}
+          </a>
+        </li>
+      </ul>
+      {% load thumbnail %}
+      <div class="row-fluid">
+        <div class="span10">
+        {% for image in product.image_set.all %}
+        {% if image.default %}
+          <div id="gallery" data-toggle="modal-gallery" data-target="#modal-gallery">
+            <a href="/media/{{ image.image }}" title="" rel="gallery">
+              <img class="img-sorce" src="{% thumbnail image.image 600x600 crop %}" width="{{image.width }}" height="{{ image.height }}" />
+            </a>
+          </div>
+        {% endif%}
+        {% endfor %}
+        </div>
+        <div class="span2">	
+          <ul class="thumbnails">
+          {% for image in product.image_set.all %}
+            <li>
+              <a href="#" class="thumbnail" title="{{ product.description }}">
+                <img rel="{% thumbnail image.image 600x600 crop %}" class="img-thumbnail" src="{% thumbnail image.image 120x120 crop %}" width="{{image.width }}" height="{{ image.height }}" />
+              </a>
+            </li>
+          {% endfor %}
+          </ul>
+        </div>
+      </div>
+      <p>{{ product.description }}</p>
+      <!-- modal-gallery is the modal dialog used for the image gallery -->
+      <div id="modal-gallery" class="modal modal-gallery hide fade">
+        <div class="modal-header">
+            <a class="close" data-dismiss="modal">&times;</a>
+            <h3 class="modal-title"></h3>
+        </div>
+        <div class="modal-body"><div class="modal-image"></div></div>
+      </div>
+    </div><!--/span-->
+    <div class="span4">
+      <h2>&#36;{{ product.price }}</h2>
+      <a class="btn btn-success btn-large" href="#">
+        <i class="icon-shopping-cart icon-white"></i>
+          <span class="button_line"></span>
+          Checkout
+      </a>
+    </div><!--/span-->
+  </div><!--/row-->
+</div><!--/container-->
+{% endblock %}
