@@ -60,12 +60,24 @@
       </div>
     </div><!--/span-->
     <div class="span4">
+      <div class="alert alert-error hide" id="error-favorite">
+      </div>
       <h2>&#36;{{ product.price }}</h2>
       <a class="btn btn-success btn-large" href="#">
         <i class="icon-shopping-cart icon-white"></i>
-          <span class="button_line"></span>
+          <span class="button_line">|</span>
           Checkout
       </a>
+
+      <form action="/{% if product_favorite %}removeFavorite{% else %}addFavorite{% endif %}/" method="post" class="clearfix" id="id-favorite-form">{% csrf_token %}
+
+        <input type="hidden" name="product_id" value="{{ product.id }}" />
+        <a alt="Añadir a favoritos" {% if user.is_authenticated %}class="btn btn-mini btn-favorite" href="#"{% else %}class="btn btn-mini" data-toggle="modal" href="#login_modal"{% endif %} >
+          <i class="icon-heart  {% if product_favorite %}icon-red{% endif %}" id="9999"></i>
+          <img id="icon-preloaded" class="hide" src="{{ STATIC_PREFIX }}img/preloded_14x14.gif" />
+            Favorito
+        </a>
+      </form>
     </div><!--/span-->
   </div><!--/row-->
 </div><!--/container-->

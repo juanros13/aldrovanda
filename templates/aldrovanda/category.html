@@ -22,36 +22,13 @@
           </a>
         </li>
       </ul>
-      <div class="row">
-      {% load thumbnail %}
-      {% for product in products_list %}
-        <div class="span3">
-        {% for image in product.image_set.all %}
-        {% if image.default %}
-          <a href="{{ product.get_absolute_url }}" class="thumbnail" title="{{ product.description }}">
-            <img src="{% thumbnail image.image 150x150 crop %}" width="150" height="150" />
-          </a>
-        {% endif%}
-        {% endfor %}
-          <div class="listing-detail">
-            <h2>
-              <a class="listing-title" href="{{ product.get_absolute_url }}" title="{{ product.name }}" >
-              {{ product.name|truncatechars:20 }}
-              </a>
-            </h2>
-            <div class="listing-price">
-              <span class="currency-symbol">&euro;</span>{{ product.price }}<span class="currency-code">EUR</span>
-            </div>
-          </div>	
-        </div><!--/span -->
-      {% endfor %}
-      </div><!--/row -->
+     {% include "aldrovanda/include/products_list.html" %}
 		</div><!--/span-->
 		<div class="span3">
 			<div class="well sidebar-nav">
 				<ul class="nav nav-list">
 					<li class="nav-header">
-							{{ category.get_root }}
+							<h4>{{ category.get_root }}</h4>
 					</li>
 					{% for cat in categories_sibling %}
 						{% if cat.slug == category.parent.slug or cat.slug == category.slug %}

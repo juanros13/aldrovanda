@@ -1,0 +1,40 @@
+{% extends "aldrovanda/base.html" %}
+
+{% block title %}Vender en Aldrovanda{% endblock %}
+
+{% block body %}
+{% load mptt_tags %}
+<div class="container">
+  <div class="row">
+    <div class="span2">
+     {{ user }}
+    </div><!--/span-->
+    <div class="span10">
+      <a class="btn btn-info btn-large" href="#">
+        Shop
+        <i class="icon-forward icon-white"></i>
+      </a>
+      <a class="btn btn-info btn-large" href="#">
+        Elegir Tienda
+        <i class="icon-forward icon-white"></i>
+      </a>
+      <a class="btn btn-info btn-large" href="#">
+        Agregar productos
+        <i class="icon-forward icon-white"></i>
+      </a>
+      <a class="btn btn-info btn-large" href="#">
+        Configurar pago
+        <i class="icon-forward icon-white"></i>
+      </a>
+      <a class="btn btn-info btn-large" href="#">
+        Envio
+        <i class="icon-forward icon-white"></i>
+      </a>
+      <a class="btn btn-info btn-large disabled " href="#">
+        Abrir Tienda
+        <i class="icon-forward icon-white"></i>
+      </a>
+    </div>
+  </div><!--/row-->
+</div><!--/container-->
+{% endblock %}

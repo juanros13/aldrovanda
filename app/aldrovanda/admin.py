@@ -1,4 +1,4 @@
-from aldrovanda.models import Product, Image, Category
+from aldrovanda.models import Product, Image, Category, UserDefault
 from django.contrib import admin
 from django.forms import ModelForm
 from django import forms
@@ -18,4 +18,5 @@ class ProductAdmin(admin.ModelAdmin):
 
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Category, MPTTModelAdmin)
+#admin.site.register(UserDefault)
 #admin.site.register(Image)

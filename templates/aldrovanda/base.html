@@ -45,10 +45,14 @@
             <li class="divider-vertical"></li>
             <li><a href="#">Home</a></li>
             <li class="divider-vertical"></li>
-            <li><a href="#">Comprar</a></li>
+            <li><a href="">Comprar</a></li>
             <li class="divider-vertical"></li>
-            <li><a href="#">Vender</a></li>
+            <li><a href="{% url aldrovanda.views.sell %}">Vender</a></li>
             <li class="divider-vertical"></li>
+            {% if user.is_authenticated %}
+            <li><a href="{% url aldrovanda.views.index %}">Favoritos</a></li>
+            <li class="divider-vertical"></li>
+            {% endif %}
           </ul>
           <ul class="nav pull-right">
           <form class="navbar-search pull-left" action="">
@@ -118,9 +122,6 @@
 <script src="{{ STATIC_PREFIX }}js/libs/bootstrap/tab.js"></script>
 <script src="http://blueimp.github.com/JavaScript-Load-Image/load-image.min.js"></script>
 <script src="{{ STATIC_PREFIX }}js/libs/bootstrap/image-gallery.js"></script>
-
-
-
 
 <script src="{{ STATIC_PREFIX }}js/script.js"></script>
 

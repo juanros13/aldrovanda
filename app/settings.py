@@ -153,3 +153,9 @@ LOGGING = {
         },
     }
 }
+AUTH_PROFILE_MODULE = 'accounts.UserDefault'
+
+PAGINATION_SETTINGS = {
+    'PAGE_RANGE_DISPLAYED': 10,
+    'MARGIN_PAGES_DISPLAYED': 2,
+}

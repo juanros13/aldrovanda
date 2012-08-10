@@ -2,34 +2,58 @@
 from django.shortcuts import render_to_response, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse, Http404, HttpResponseServerError
 from django.core.urlresolvers import reverse
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.template import RequestContext
 from django.contrib.auth import authenticate, login as auth_login
 from django.views.decorators.http import require_POST
 from django.contrib.auth.models import User
 from django.contrib.auth import logout
 from django.utils import simplejson
-from aldrovanda.models import Product, Image, Category
+from aldrovanda.models import Product, Image, Category, UserDefault, Favorite
+from aldrovanda.paginator import Paginator
 from mptt.utils import *
+
 
 # Create your views here.
 def index(request):
 	#return HttpResponse("Hello, world. Youre at the poll index.")
-	latest_products_list = Product.objects.filter(image__default=True).order_by('-creation_date')[:16]
+	#latest_products_list = Product.objects.filter(image__default=True).order_by('-creation_date')[:8]
+	products = Product.objects.filter(image__default=True).order_by('-creation_date')
+	paginator = Paginator(products, 16) # Show 25 contacts per page
+
+	
+	try:
+		page = request.GET.get('page', 1)
+	except PageNotAnInteger:
+		page = 1
+
+
+	try:
+		products_list = paginator.page(page)
+	except PageNotAnInteger:
+		# If page is not an integer, deliver first page.
+		products_list = paginator.page(1)
+	except EmptyPage:
+		# If page is out of range (e.g. 9999), deliver last page of results.
+		products_list = paginator.page(paginator.num_pages)
+
 	category_list = Category.objects.filter(parent__isnull=True)[:16]
-	if request.user.is_authenticated():
+
+	#if request.user.is_authenticated():
 		# Do something for authenticated users.
-		user = request.user
-	else:
-		user = False
+		#user = request.user
+	#else:
+		#user = False
     # Do something for anonymous users.
 	#t = loader.get_template('products/index.html')
 	#c = Context({
 	#	'latest_products_list': latest_product_list,
 	#})
 	#return HttpResponse(t.render(c))
+
 	return render_to_response('aldrovanda/home.html', 
 							 	{
-									'latest_products_list': latest_products_list,
+									'products_list': products_list,
 									'category_list': category_list,
 								}, context_instance=RequestContext(request))
 def detail(request, product_id):
@@ -37,10 +61,16 @@ def detail(request, product_id):
 	p = get_object_or_404(Product, pk=product_id)
 	#c = p.category.get_categories_with_links()
 	category_list = p.category
+	product_favorite = False
+	if request.user.is_authenticated():
+		if Favorite.objects.filter(product=p, user=request.user).exists():
+			product_favorite = True
+
 	#rating_list = Rating.objects.all().order_by('-value')[:5]
 	return render_to_response('aldrovanda/product.html', {
 		'product': p,
 		'category': category_list,
+		'product_favorite': product_favorite,
 	}, context_instance=RequestContext(request))
 
 def category(request, full_slug):
@@ -62,9 +92,23 @@ def category(request, full_slug):
 		categories_sibling = Category.objects.filter(parent__isnull=True)
 
 	category_list_children = category.get_descendants(include_self=True)
-	
-	products_list = Product.objects.filter(category__in=category_list_children).order_by('creation_date')
-	
+
+	products = Product.objects.filter(category__in=category_list_children).order_by('creation_date')
+	paginator = Paginator(products, 16) # Show 25 contacts per page
+	try:
+		page = request.GET.get('page', 1)
+	except PageNotAnInteger:
+		page = 1
+
+
+	try:
+		products_list = paginator.page(page)
+	except PageNotAnInteger:
+		# If page is not an integer, deliver first page.
+		products_list = paginator.page(1)
+	except EmptyPage:
+		# If page is out of range (e.g. 9999), deliver last page of results.
+		products_list = paginator.page(paginator.num_pages)
 	#level = category.get
 	#
 	#test = tree_item_iterator(category)
@@ -155,10 +199,86 @@ def disconnect(request):
 
 def shop(request, username):
 	username = get_object_or_404(User, username=username)# User.objects.get(username=username)
+	products = Product.objects.filter(image__default = True, user__username=username).order_by('-creation_date')[:16]
+
+	paginator = Paginator(products, 16) # Show 25 contacts per page
+	try:
+		page = request.GET.get('page', 1)
+	except PageNotAnInteger:
+		page = 1
+
+
+	try:
+		products_list = paginator.page(page)
+	except PageNotAnInteger:
+		# If page is not an integer, deliver first page.
+		products_list = paginator.page(1)
+	except EmptyPage:
+		# If page is out of range (e.g. 9999), deliver last page of results.
+		products_list = paginator.page(paginator.num_pages)
+
 	if(username):
 		#return HttpResponse(username.email)
 		return render_to_response('aldrovanda/shop.html', {
-			'username': username,
+			'username' : username,
+			'products_list' : products_list,
 		}, context_instance=RequestContext(request))
-	
-	
+
+@require_POST
+def addFavorite(request):
+	to_return = {'msg' : u'Sin datos del POST' }
+	to_return['success'] = False
+	product_id = request.POST['product_id']
+	if request.method == "POST":
+		post = request.POST.copy()
+		if post.has_key('product_id'):
+			if request.user.is_authenticated():
+				# Do something for authenticated users.
+				user = request.user
+				product = get_object_or_404(Product, pk = product_id)
+				product_favorite = Favorite(product = product, user = user)
+				product_favorite.save()
+				to_return['success'] = True
+			else:
+				#product_favorite = 'Usuario no Logueado redireccionar a la forma login'
+				to_return['msg'] = u"Usuario no logueado."
+				#return HttpResponseRedirect('/')
+		else :
+			to_return['msg'] = u"No se proporciono el id para agregar a favoritos."
+	else :
+		to_return['msg'] = u"No es un POST."
+	#return HttpResponseRedirect()
+	#return HttpResponse(product_favorite)
+	serialized = simplejson.dumps(to_return)
+	return HttpResponse(serialized, mimetype="application/json")
+
+@require_POST
+def removeFavorite(request):
+	to_return = {'msg' : u'Sin datos del POST' }
+	to_return['success'] = False
+	product_id = request.POST['product_id']
+	if request.method == "POST":
+		post = request.POST.copy()
+		if post.has_key('product_id'):
+			if request.user.is_authenticated():
+				# Do something for authenticated users.
+				user = request.user
+				product = get_object_or_404(Product, pk = product_id)
+				product_to_deleted = get_object_or_404(Favorite, product = product, user = user)
+				product_to_deleted.delete()
+				to_return['success'] = True
+			else:
+				#product_favorite = 'Usuario no Logueado redireccionar a la forma login'
+				to_return['msg'] = u"Usuario no logueado."
+				#return HttpResponseRedirect('/')
+		else :
+			to_return['msg'] = u"No se proporciono el id para agregar a favoritos."
+	else :
+		to_return['msg'] = u"No es un POST."
+	#return HttpResponseRedirect()
+	#return HttpResponse(product_favorite)
+	serialized = simplejson.dumps(to_return)
+	return HttpResponse(serialized, mimetype="application/json")
+def sell(request):
+	return render_to_response('aldrovanda/sell.html', {
+	}, context_instance=RequestContext(request))

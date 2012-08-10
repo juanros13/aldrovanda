@@ -33,8 +33,7 @@ $.extend($.validator.messages, {
     min: $.validator.format("Ingrese un valor mayor o igual a {0}")
 });
 //Validacion de la forma para Login
-$('#id-login-form').validate(
- {
+$('#id-login-form').validate({
   rules: {
     username: {
       minlength: 2,
@@ -54,7 +53,7 @@ $('#id-login-form').validate(
   submitHandler: function() {
 	    //Get the data from all the fields
       var $form     = $('#id-login-form'),
-      data          = $("#id-login-form").serializeArray(),
+      data          = $form.serializeArray(),
       $error        = $form.find('div.alert-error:first')
       header_error  = '<h4 class="alert-heading">Error</h4>';
 
@@ -69,44 +68,83 @@ $('#id-login-form').validate(
 			}) 
 			.error(function(e) { alert('error'+e); });
 	},
- });
- //Validacion de la forma para Registrarse
- $('#id-register-form').validate(
- {
-  rules: {
-    first_name: {
-      minlength: 2,
-      required: true
-    },
-    last_name: {
-      required: true,
-      minlength: 2,
-    },
-    email: {
-      required: true,
-      email: true
-    },
-    password: {
-      required: true,
-      minlength: 6,
-    },
-    password_repeat: {
-      required: true,
-      minlength: 6,
-    },
-    username: {
-      required: true,
-      minlength: 6,
-    },
+});
+//Validacion de la forma para Registrarse
+$('#id-register-form').validate(
+{
+rules: {
+  first_name: {
+    minlength: 2,
+    required: true
   },
-  highlight: function(label) {
-    $(label).closest('.control-group').addClass('error');
+  last_name: {
+    required: true,
+    minlength: 2,
   },
-  success: function(label) {
-    label.closest('.control-group').removeClass('error');
+  email: {
+    required: true,
+    email: true
   },
-  submitHandler: function() {
-			alert("submit! use link below to go to the other step");
-	},
- });
- 
+  password: {
+    required: true,
+    minlength: 6,
+  },
+  password_repeat: {
+    required: true,
+    minlength: 6,
+  },
+  username: {
+    required: true,
+    minlength: 6,
+  },
+},
+highlight: function(label) {
+  $(label).closest('.control-group').addClass('error');
+},
+success: function(label) {
+  label.closest('.control-group').removeClass('error');
+},
+//submitHandler: function() {
+		//alert("submit! use link below to go to the other step");
+//},
+});
+
+////////////////////////////////
+//Add favorite product
+////////////////////////////////
+
+$('.btn-favorite').click(function(){
+  
+  var $form     = $('#id-favorite-form'),
+  data          = $form.serializeArray(),
+  $icono        = $(this).find('i:first'),
+  $img          = $(this).find('img:first'),
+  $error        = $('#error-favorite'),
+  action        = $form.attr('action'),
+  header_error  = '<h4 class="alert-heading">Error</h4>';
+
+  $icono.addClass('hide');
+  $img.removeClass('hide');
+  //alert($form.attr('action'));
+  $.post(action, data, function(json) {
+    if (json.success) {
+      //alert('OK');
+      if(action=='/addFavorite/'){
+        $form.get(0).setAttribute('action', '/removeFavorite/');
+        $icono.removeClass('hide').addClass('icon-red');
+      }else{
+        $form.get(0).setAttribute('action', '/addFavorite/');
+        $icono.removeClass('hide').removeClass('icon-red');
+      }
+    } else {
+      $('error-product').html(header_error+json.msg).slideDown(400).delay(1500).slideUp(400);
+    }
+    //$img.hide();
+    //$icono.show();
+    return;
+      // Etc ...
+  }) 
+  .error(function(e) { alert('Error:'+e); });
+  $icono.removeClass('hide').removeClass('icon-red');
+  $img.addClass('hide');
+});

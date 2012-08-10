@@ -1,8 +1,8 @@
 {% extends "aldrovanda/base.html" %}
 
 {% block body %}
-<div class="container">
-  <div class="row">
+<div class="container-fluid">
+  <div class="row-fluid">
     <div class="span9">
       <!-- Main hero unit for a primary marketing message or call to action -->
       <div class="hero-unit">
@@ -10,37 +10,12 @@
         <p>This is a template for a simple marketing or informational website. It includes a large callout called the hero unit and three supporting pieces of content. Use it as a starting point to create something more unique.</p>
         <p><a class="btn btn-primary btn-large">Learn more &raquo;</a></p>
       </div>
-
-      <!-- Example row of columns -->
-      <div class="row">
-      {% load thumbnail %}
-      {% for product in latest_products_list %}
-        <div class="span3">
-        {% for image in product.image_set.all %}
-        {% if image.default %}
-          <a href="{{ product.get_absolute_url }}" class="thumbnail" title="{{ product.description }}">
-            <img src="{% thumbnail image.image 150x150 crop %}" width="150" height="150" />
-          </a>
-        {% endif%}
-        {% endfor %}
-          <div class="listing-detail">
-            <h2>
-              <a class="listing-title" href="{{ product.get_absolute_url }}" title="{{ product.name }}" >
-              {{ product.name|truncatechars:20 }}
-              </a>
-            </h2>
-            <div class="listing-price">
-              <span class="currency-symbol">&euro;</span>{{ product.price }}<span class="currency-code">EUR</span>
-            </div>
-          </div>	
-        </div><!--/span -->
-      {% endfor %}
-      </div><!--/row -->
+      {% include "aldrovanda/include/products_list.html" %}
     </div><!--/span-->
     <div class="span3">
        <div class="well sidebar-nav">
           <ul class="nav nav-list">
-            <li class="nav-header">Categorias</li>
+            <li class="nav-header"><h2>Categorias</h2></li>
             {% for category in category_list %}
             <li ><a href="{{ category.get_absolute_url }}">{{category.name}}</a></li>
             {% endfor %}

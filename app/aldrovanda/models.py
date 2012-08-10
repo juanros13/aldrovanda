@@ -3,11 +3,25 @@ from easy_thumbnails.fields import ThumbnailerImageField
 from django.forms import ModelForm
 from django.contrib import admin
 from django.contrib.auth.models import User
+from django.db.models.signals import post_save
 from django.conf import settings
 from easy_thumbnails.files import get_thumbnailer
 from mptt.models import MPTTModel, TreeForeignKey
 
 
+class UserDefault(models.Model):
+	# This field is required.
+	user = models.OneToOneField(User)
+
+	# Other fields 
+	facebook_id = models.CharField(max_length=300)
+	facebook_token = models.CharField(max_length=450)
+
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        UserDefault.objects.create(user=instance)
+
+post_save.connect(create_user_profile, sender=User)
 
 class Category(MPTTModel):
 	name = models.CharField(max_length=200)
@@ -97,3 +111,8 @@ class Image(models.Model):
 		verbose_name = 'Imagen'
 		verbose_name_plural = 'Imagenes'
 
+class Favorite(models.Model):
+	product = models.ForeignKey(Product)
+	user = models.ForeignKey(User)
+	class Meta:
+		unique_together = ('product', 'user',)
