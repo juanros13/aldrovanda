@@ -21,7 +21,8 @@
   to style.css, and replace the 2 lines above by this one:
   <link rel="stylesheet/less" href="less/style.css">
    -->
-
+  <link rel="stylesheet/less" href="{{ STATIC_PREFIX  }}css/jquery-ui-1.8.23.custom.css">
+  
   <script src="{{ STATIC_PREFIX }}js/libs/modernizr-2.5.3-respond-1.1.0.min.js"></script>
   {% block head %}{% endblock %}
 </head>
@@ -31,6 +32,7 @@
   {% include "aldrovanda/include/login_form.html" %}
 {% endif %}
 <div id="header">
+  {% block header %}
   <div class="navbar">
     <div class="navbar-inner">
       <div class="container">
@@ -79,6 +81,7 @@
       </div>
     </div><!-- /navbar-inner -->
   </div><!-- /navbar -->
+  {% endblock %}
 </div><!-- /header -->
 {% block body %}{% endblock %}
 <div class="container">
@@ -113,6 +116,14 @@
 <script>window.jQuery || document.write('<script src="js/libs/jquery-1.7.2.min.js"><\/script>')</script>
 <script src="{{ STATIC_PREFIX }}js/libs/jquery.validate.min.js"></script>
 
+
+<script src="{{ STATIC_PREFIX }}js/libs/ui/jquery.ui.core.js"></script>
+<script src="{{ STATIC_PREFIX }}js/libs/ui/jquery.ui.widget.js"></script>
+<script src="{{ STATIC_PREFIX }}js/libs/ui/jquery.ui.mouse.js"></script>
+<script src="{{ STATIC_PREFIX }}js/libs/ui/jquery.ui.sortable.js"></script>
+
+
+
 <script src="{{ STATIC_PREFIX }}js/libs/bootstrap/transition.js"></script>
 <script src="{{ STATIC_PREFIX }}js/libs/bootstrap/collapse.js"></script>
 <script src="{{ STATIC_PREFIX }}js/libs/bootstrap/dropdown.js"></script>
@@ -120,8 +131,8 @@
 <script src="{{ STATIC_PREFIX }}js/libs/bootstrap/modal.js"></script>
 <script src="{{ STATIC_PREFIX }}js/libs/bootstrap/transition.js"></script>
 <script src="{{ STATIC_PREFIX }}js/libs/bootstrap/tab.js"></script>
-<script src="http://blueimp.github.com/JavaScript-Load-Image/load-image.min.js"></script>
-<script src="{{ STATIC_PREFIX }}js/libs/bootstrap/image-gallery.js"></script>
+<script src="{{ STATIC_PREFIX }}js/libs/bootstrap/tooltip.js"></script>
+<script src="{{ STATIC_PREFIX }}js/libs/bootstrap/popover.js"></script>
 
 <script src="{{ STATIC_PREFIX }}js/script.js"></script>
 

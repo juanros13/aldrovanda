@@ -1,40 +1,147 @@
 {% extends "aldrovanda/base.html" %}
 
 {% block title %}Vender en Aldrovanda{% endblock %}
+{% block header %}
+<div class="container" >
+  <div class="row-fluid">
+    <div class="span8" >
+      <a class="brand" href="{% url aldrovanda.views.index %}">Aldrovanda</a>
+    </div>
+    <div class="span4 pull-right" >
+      <div class="pull-right">
+        {{ user }} <a href="#">Logout</a> | <a href="#">Ayuda</a>
+      </div>
+      
+    </div>
+  </div>    
+</div>
+<div class="container" >
+  <ul class="steps">
+    <li class="step-1" >
+      <a href="/your/shops/lobo022000/name" class="tt-hover-b  completed" rel="tooltip" title="Choose a shop name.">
+        <div class="step-inner">
+          Shop Name<span class="completed-indicator"></span>
+        </div>
+      </a>
+      
+    </li>
+    <li class="step-2">
+      <a href="/your/listings/create" class="tt-hover-b active " rel="tooltip" title="What are you going to sell? Add and edit listings here.">
+        <div class="step-inner">
+          List Items<span class="completed-indicator"></span>
+        </div>
+      </a>
+    </li>
+    <li class="step-3">
+      <a href="/your/shops/lobo022000/payments" class="tt-hover-b  " rel="tooltip" title="Choose your shop payment methods.">
+        <div class="step-inner">
+            Get Paid<span class="completed-indicator"></span>
+        </div>
+      </a>
+    </li>
+    <li class="step-4">
+      <a href="/your/account/billing" class="tt-hover-b  "  rel="tooltip" title="Enter the credit card you want to use to pay your bill.">
+        <div class="step-inner">
+          Billing<span class="completed-indicator"></span>
+        </div>
+      </a>
+    </li>
+    <li class="step-5">
+      <a>
+        <div class="step-inner">
+          Open Shop
+          <span class="completed-indicator"></span>
+        </div>
+      </a>
+    </li>
+    <li class="preview">
+      <a class="tt-hover-b " href="/your/shops/lobo022000/preview" rel="tooltip" title="Preview your shop page.">
+        <div class="step-inner">
+          Preview
+        </div>
+      </a>
+    </li>
+  </ul>
+</div>
+{% endblock %}
 
 {% block body %}
 {% load mptt_tags %}
 <div class="container">
   <div class="row">
-    <div class="span2">
-     {{ user }}
-    </div><!--/span-->
-    <div class="span10">
-      <a class="btn btn-info btn-large" href="#">
-        Shop
-        <i class="icon-forward icon-white"></i>
-      </a>
-      <a class="btn btn-info btn-large" href="#">
-        Elegir Tienda
-        <i class="icon-forward icon-white"></i>
-      </a>
-      <a class="btn btn-info btn-large" href="#">
-        Agregar productos
-        <i class="icon-forward icon-white"></i>
-      </a>
-      <a class="btn btn-info btn-large" href="#">
-        Configurar pago
-        <i class="icon-forward icon-white"></i>
-      </a>
-      <a class="btn btn-info btn-large" href="#">
-        Envio
-        <i class="icon-forward icon-white"></i>
-      </a>
-      <a class="btn btn-info btn-large disabled " href="#">
-        Abrir Tienda
-        <i class="icon-forward icon-white"></i>
-      </a>
+    <div class="span12">
+      <ul id="myTab" class="nav nav-tabs">
+        <li class="active">
+          <a href="#agregar" data-toggle="tab">
+            <h2>Agrega producto</h2>
+          </a>
+        </li>
+        <li>
+          <a href="#manejar" data-toggle="tab">
+            <h2>Manejar productos</h2>
+          </a>
+        </li>
+      </ul>
+      <div id="myTabContent" class="tab-content">
+        <div class="tab-pane fade in active" id="agregar">
+          <form class="form-horizontal">
+            <fieldset>
+              <legend>Agregar productos</legend>
+              <div class="control-group well">
+                <label class="control-label" for="input01"><h4>Acerca del producto</h4></label>
+                <div class="controls">
+                  <h5>Con que esta hecho el producto?</h5><br/>
+                    <select>
+                    <option>uno</option>
+                    <option>uno</option>
+                    <option>uno</option>
+                    <option>uno</option>
+                  </select>
+                </div>
+                <hr/>
+                <label class="control-label" for="input01"><h4>Categorias</h4></label>
+                <div class="controls">
+                  <h5>Que es?</h5><br/>
+                    <select>
+                    <option>uno</option>
+                    <option>uno</option>
+                    <option>uno</option>
+                    <option>uno</option>
+                  </select>
+                </div>
+              </div>
+              <div class="control-group well">
+                <label class="control-label" for="input01"><h4>Fotografias</h4></label>
+                <div class="controls">
+                  <ul id="sortable">
+                    <li class="ui-state-default">
+                      <div class="upload-container">
+                        <input type="file" name="image-upload" id="image-upload" class="image-upload" multiple="multiple">
+                      </div>
+                      <div class="add-photos-button">
+                        <span class="button-add"></span>
+                        <span>Add Photos</span>
+                      </div>
+                    </li>
+                    <li class="ui-state-default">2</li>
+                    <li class="ui-state-default">3</li>
+                    <li class="ui-state-default">4</li>
+                    <li class="ui-state-default">5</li>
+                    <li class="ui-state-default">6</li>
+                  </ul>
+                </div>
+              </div>
+            </fieldset>
+          </form>
+        </div>
+        <div class="tab-pane fade" id="manejar">
+          <p>Food truck fixie locavore, accusamus mcsweeney's marfa nulla single-origin coffee squid. Exercitation +1 labore velit, blog sartorial PBR leggings next level wes anderson artisan four loko farm-to-table craft beer twee. Qui photo booth letterpress, commodo enim craft beer mlkshk aliquip jean shorts ullamco ad vinyl cillum PBR. Homo nostrud organic, assumenda labore aesthetic magna delectus mollit. Keytar helvetica VHS salvia yr, vero magna velit sapiente labore stumptown. Vegan fanny pack odio cillum wes anderson 8-bit, sustainable jean shorts beard ut DIY ethical culpa terry richardson biodiesel. Art party scenester stumptown, tumblr butcher vero sint qui sapiente accusamus tattooed echo park.</p>
+        </div>
+      </div>
     </div>
   </div><!--/row-->
 </div><!--/container-->
+ <style>
+  
+  </style>
 {% endblock %}

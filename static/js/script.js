@@ -148,3 +148,13 @@ $('.btn-favorite').click(function(){
   $icono.removeClass('hide').removeClass('icon-red');
   $img.addClass('hide');
 });
+$("[rel=tooltip]").tooltip({placement:'bottom'});
+$('[rel=popover]').popover()
+$( "#sortable" ).sortable({
+  update: function(event, ui) {
+    var info = $(this).sortable("serialize");
+    //$("#sort1output").html(info);
+    alert(ui.item.index());
+  }
+});
+$( "#sortable" ).disableSelection();

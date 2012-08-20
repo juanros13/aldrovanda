@@ -19,7 +19,7 @@ def index(request):
 	#return HttpResponse("Hello, world. Youre at the poll index.")
 	#latest_products_list = Product.objects.filter(image__default=True).order_by('-creation_date')[:8]
 	products = Product.objects.filter(image__default=True).order_by('-creation_date')
-	paginator = Paginator(products, 16) # Show 25 contacts per page
+	paginator = Paginator(products, 12) # Show 25 contacts per page
 
 	
 	try:
