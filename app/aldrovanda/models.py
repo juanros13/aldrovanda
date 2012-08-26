@@ -101,6 +101,9 @@ class Image(models.Model):
 	creation_date = models.DateTimeField(
 		auto_now_add = True
 	)
+	order = models.IntegerField(
+		verbose_name = 'Orden de las fotos',
+	)
 	#sobreescribiendo save para poder hacer unica la imagen default
 	def save(self, *args, **kwargs):
 		if self.default:

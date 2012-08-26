@@ -150,11 +150,38 @@ $('.btn-favorite').click(function(){
 });
 $("[rel=tooltip]").tooltip({placement:'bottom'});
 $('[rel=popover]').popover()
-$( "#sortable" ).sortable({
+$( "#photos" ).sortable({
   update: function(event, ui) {
     var info = $(this).sortable("serialize");
     //$("#sort1output").html(info);
     alert(ui.item.index());
   }
 });
-$( "#sortable" ).disableSelection();
+$( "#photos" ).disableSelection();
+/* Se usa pra mover el input file pero se pudo acomodar con puro css
+$(".upload-container").mousemove(function(e) {
+    var offL, offR, inpStart
+    offL = $(this).offset().left;
+    offT = $(this).offset().top;
+    aaa= $(this).find("input").width();
+    $(this).find("input").css({
+        left:e.pageX-aaa-30,
+        top:e.pageY-offT-10
+    })
+}); */
+$('#image-upload').live('change', function(){ 
+  
+
+  var liUploadImage = $('#image-upload').parent().parent();
+  var options = { 
+    url:        '../uploadImage/', 
+    target: liUploadImage,
+    success:    function() { 
+        alert('Thanks for your comment!'); 
+    } 
+  };
+  liUploadImage.html('');
+  liUploadImage.html('<img style="margin:auto;padding-top:20px;"src="../static/img/preloded_upload_image.gif" />');
+  $("#add-product").ajaxForm(options).submit();
+});
+

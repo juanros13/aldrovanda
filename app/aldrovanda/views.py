@@ -282,3 +282,13 @@ def removeFavorite(request):
 def sell(request):
 	return render_to_response('aldrovanda/sell.html', {
 	}, context_instance=RequestContext(request))
+def uploadImage(request):
+	for upfile in request.FILES.getlist('form_file'):
+		print upfile.name
+		filename = upfile.name
+		fd = open(filename, 'w+')  # or 'wb+' for binary file
+		for chunk in upfile.chunks():
+			fd.write(chunk)
+		fd.close()
+	return HttpResponse("ok ok ok")
+	

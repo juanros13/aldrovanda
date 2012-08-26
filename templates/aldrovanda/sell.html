@@ -84,7 +84,7 @@
       </ul>
       <div id="myTabContent" class="tab-content">
         <div class="tab-pane fade in active" id="agregar">
-          <form class="form-horizontal">
+          <form id="add-product" name="add-product" method="post" enctype="multipart/form-data" action='addProduct' class="form-horizontal">{% csrf_token %}
             <fieldset>
               <legend>Agregar productos</legend>
               <div class="control-group well">
@@ -110,25 +110,38 @@
                   </select>
                 </div>
               </div>
-              <div class="control-group well">
+              <div class="control-group">
                 <label class="control-label" for="input01"><h4>Fotografias</h4></label>
                 <div class="controls">
-                  <ul id="sortable">
-                    <li class="ui-state-default">
+                  <div>
+                  <ul id="photos">
+                    <li>
+                       <!--[if IE 7]>
+                          <style type="text/css">
+                              input#image-upload { width: 100px;}
+                          </style>
+                      <![endif]-->
                       <div class="upload-container">
-                        <input type="file" name="image-upload" id="image-upload" class="image-upload" multiple="multiple">
+                          <input type="file" name="image-upload" id="image-upload" class="image-upload" multiple/>
                       </div>
                       <div class="add-photos-button">
-                        <span class="button-add"></span>
+                        <div class="image-active-icon">
+                          <i class="icon-plus-sign icon-blue"></i>
+                        </div>
                         <span>Add Photos</span>
                       </div>
                     </li>
-                    <li class="ui-state-default">2</li>
-                    <li class="ui-state-default">3</li>
-                    <li class="ui-state-default">4</li>
-                    <li class="ui-state-default">5</li>
-                    <li class="ui-state-default">6</li>
+                    <li>
+                      <div class="add-photos-button" />
+                    </li>
+                    <li>
+                      <div class="add-photos-button" />
+                    </li>
+                    <li>
+                      <div class="add-photos-button" />
+                    </li>
                   </ul>
+                </div>
                 </div>
               </div>
             </fieldset>
@@ -139,9 +152,7 @@
         </div>
       </div>
     </div>
+
   </div><!--/row-->
 </div><!--/container-->
- <style>
-  
-  </style>
 {% endblock %}

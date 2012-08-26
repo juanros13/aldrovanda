@@ -121,23 +121,45 @@ left:327px
 .steps .tt-mini .tt-inner p{font-size:12px!important}
 
 /********COMPONENTE IMAGENES UPLOAD*****/
-#sortable { 
+#photos { 
   list-style-type: none; 
   margin: 0; 
   padding: 0; 
-  border:1px solid;
+
 }
-#sortable li { 
+#photos li { 
   margin: auto; 
-  padding-top: 25px; 
   float: left; 
   width: 100px; 
-  height: 50px; 
-  font-size: 4em; 
+  height: 80px; 
+  font-size: 1em; 
   text-align: center; 
-  border:1px solid;
+  border: 1px dotted #0192b5;
+  margin-right:5px;
+  position:relative;
+  z-index:888;
 }
 
+.add-photos-button {
+  width:90px;
+  height:70px;
+  display:block;
+  text-transform:uppercase;
+  font-size:10px;
+  font-weight:bold;
+  text-align:center;
+  text-decoration:none;
+  color:#0192b5;
+  z-index:0;
+  margin:5px;
+  background-image: url("../img/blue-hash.png");
+  cursor: move;
+}
+
+.image-active-icon {
+  width:90px;
+  height:20px;
+}
 .upload-container {
   position:absolute;
   z-index:999;
@@ -148,42 +170,18 @@ left:327px
   height:75px;
   cursor:pointer;
 }
-.add-photos-button {
-  background:#f5f5f1;
-  width:90px;
-  height:59px;
-  display:block;
-  padding-top:12px;
-  text-transform:uppercase;
-  font-size:10px;
-  font-weight:bold;
-  text-align:center;
-  text-decoration:none;
-  color:#0192b5;
-  z-index:0
-}
 
-.add-photos-button .button-add {
-  display:block;
-  margin:0 auto 8px
-}
-.de .add-photos-button .button-add {
-  margin:-4px auto 3px
-}
-.button-add{
-  display:block;
-  margin:0 auto 8px
-}
-.de .add-photos-button .button-add {
-  margin:-4px auto 3px
-}
 #image-upload,.image-upload {
   z-index:9999;
   opacity:0;
   /*filter:alpha(opacity = 0);*/
-  font-size:55px;
+  filter: ~"alpha(opacity=0)";
   position:relative;
   height:80px;
+  width:230px;
   float:right;
   cursor:pointer;
- }
+  border:1px solid;
+  margin-left: 50px;
+}
+
