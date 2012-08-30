@@ -150,7 +150,10 @@ $('.btn-favorite').click(function(){
 });
 $("[rel=tooltip]").tooltip({placement:'bottom'});
 $('[rel=popover]').popover()
+
+
 $( "#photos" ).sortable({
+  items: "li:not(.state-disabled)",
   update: function(event, ui) {
     var info = $(this).sortable("serialize");
     //$("#sort1output").html(info);
@@ -170,18 +173,38 @@ $(".upload-container").mousemove(function(e) {
     })
 }); */
 $('#image-upload').live('change', function(){ 
-  
-
-  var liUploadImage = $('#image-upload').parent().parent();
   var options = { 
     url:        '../uploadImage/', 
-    target: liUploadImage,
-    success:    function() { 
-        alert('Thanks for your comment!'); 
-    } 
+    afterSubmit : preloadImage($(this)),
+    success: loadImage($(this)),
+    target: true
   };
-  liUploadImage.html('');
-  liUploadImage.html('<img style="margin:auto;padding-top:20px;"src="../static/img/preloded_upload_image.gif" />');
   $("#add-product").ajaxForm(options).submit();
 });
 
+function loadImage(imagen, status, xhr, jqueryWreapper, este){
+  alert(status);
+  var liUploadImage = imagen.parent().parent();
+  //liUploadImage.html('');
+  //liUploadImage.html('<img style="margin:auto;" src="'+imagen+'" />');
+  //liUploadImage.html('<div class="add-photos-button"><img height="70"  style="margin:auto;" src="" /></div>');
+  //liUploadImage.css('background-image', 'url("'+imagen+'")');
+  var liNewUploadImage = liUploadImage.next();
+  liNewUploadImage.html('');
+  //liUploadImage.html('<img style="margin:auto;" src="'+imagen+'" />');
+  liNewUploadImage.html(' <div class="upload-container">'+
+                            '<input type="file" name="image-upload" id="image-upload" class="image-upload" multiple/>'+
+                        '</div>'+
+                        '<div class="add-photos-button">'+
+                          '<div class="image-active-icon">'+
+                            '<i class="icon-plus-sign icon-blue"></i>'+
+                          '</div>'+
+                          '<span>Add Photos</span>'+
+                        '</div>');
+
+}
+function preloadImage(liImagen){
+  var liUploadImage = liImagen.parent().parent().find(".add-photos-button");
+  liUploadImage.html('');
+  liUploadImage.html('<img style="margin:auto;padding-top:20px;"src="../static/img/preloded_upload_image.gif" />');
+}

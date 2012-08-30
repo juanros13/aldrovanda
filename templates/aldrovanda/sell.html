@@ -84,15 +84,15 @@
       </ul>
       <div id="myTabContent" class="tab-content">
         <div class="tab-pane fade in active" id="agregar">
-          <form id="add-product" name="add-product" method="post" enctype="multipart/form-data" action='addProduct' class="form-horizontal">{% csrf_token %}
+          <form id="add-product" name="add-product" method="post"  action='../uploadImage/'  enctype="multipart/form-data" class="form-horizontal">{% csrf_token %}
             <fieldset>
               <legend>Agregar productos</legend>
               <div class="control-group well">
                 <label class="control-label" for="input01"><h4>Acerca del producto</h4></label>
                 <div class="controls">
                   <h5>Con que esta hecho el producto?</h5><br/>
-                    <select>
-                    <option>uno</option>
+                    <select id="prudcoto1" name="producto1s">
+                    <option value="producto1">uno</option>
                     <option>uno</option>
                     <option>uno</option>
                     <option>uno</option>
@@ -110,38 +110,39 @@
                   </select>
                 </div>
               </div>
-              <div class="control-group">
+              <div class="control-group well">
                 <label class="control-label" for="input01"><h4>Fotografias</h4></label>
                 <div class="controls">
                   <div>
-                  <ul id="photos">
-                    <li>
-                       <!--[if IE 7]>
-                          <style type="text/css">
-                              input#image-upload { width: 100px;}
-                          </style>
-                      <![endif]-->
-                      <div class="upload-container">
-                          <input type="file" name="image-upload" id="image-upload" class="image-upload" multiple/>
-                      </div>
-                      <div class="add-photos-button">
-                        <div class="image-active-icon">
-                          <i class="icon-plus-sign icon-blue"></i>
+                    <ul id="photos">
+                      <li class="state-disabled">
+                         <!--[if IE 7]>
+                            <style type="text/css">
+                                input#image-upload { width: 100px;}
+                            </style>
+                        <![endif]-->
+                        <div class="upload-container">
+                            <input type="file" name="image-upload" id="image-upload" class="image-upload" multiple/>
                         </div>
-                        <span>Add Photos</span>
-                      </div>
-                    </li>
-                    <li>
-                      <div class="add-photos-button" />
-                    </li>
-                    <li>
-                      <div class="add-photos-button" />
-                    </li>
-                    <li>
-                      <div class="add-photos-button" />
-                    </li>
-                  </ul>
-                </div>
+                        <div class="add-photos-button">
+                          <div class="image-active-icon">
+                            <i class="icon-plus-sign icon-blue"></i>
+                          </div>
+                          <span>Add Photos</span>
+                        </div>
+                      </li>
+                      <li class="state-disabled">
+                        <div class="add-photos-button" />
+                      </li>
+                      <li class="state-disabled">
+                        <div class="add-photos-button" />
+                      </li>
+                      <li class="state-disabled">
+                        <div class="add-photos-button" />
+                      </li>
+                    </ul>
+                    <div id="testtest">asdas</div>
+                  </div>
                 </div>
               </div>
             </fieldset>

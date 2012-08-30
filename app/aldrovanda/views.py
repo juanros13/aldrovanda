@@ -3,6 +3,7 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse, Http404, HttpResponseServerError
 from django.core.urlresolvers import reverse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.conf import settings
 from django.template import RequestContext
 from django.contrib.auth import authenticate, login as auth_login
 from django.views.decorators.http import require_POST
@@ -11,7 +12,10 @@ from django.contrib.auth import logout
 from django.utils import simplejson
 from aldrovanda.models import Product, Image, Category, UserDefault, Favorite
 from aldrovanda.paginator import Paginator
+from easy_thumbnails.files import get_thumbnailer
 from mptt.utils import *
+import random
+
 
 
 # Create your views here.
@@ -279,16 +283,21 @@ def removeFavorite(request):
 	#return HttpResponse(product_favorite)
 	serialized = simplejson.dumps(to_return)
 	return HttpResponse(serialized, mimetype="application/json")
+
 def sell(request):
 	return render_to_response('aldrovanda/sell.html', {
 	}, context_instance=RequestContext(request))
+
 def uploadImage(request):
-	for upfile in request.FILES.getlist('form_file'):
-		print upfile.name
-		filename = upfile.name
-		fd = open(filename, 'w+')  # or 'wb+' for binary file
-		for chunk in upfile.chunks():
-			fd.write(chunk)
-		fd.close()
-	return HttpResponse("ok ok ok")
+	print request.FILES
+	for upfile in request.FILES.getlist('image-upload'):
+		arrayfilename = upfile.name.split('.')
+		filename = arrayfilename[0]  + "_" + str(random.randrange(10000,100000)) + "." + arrayfilename[1]
+		with open(settings.MEDIA_ROOT + "/uploads/" +filename, 'wb+') as destination:
+			for chunk in upfile.chunks():
+				destination.write(chunk)
+		options = {'size': (280, 160), 'crop': True}
+		thumb_url = get_thumbnailer("uploads/" +filename).get_thumbnail(options).url
+		print thumb_url
+	return HttpResponse(thumb_url)
 	
