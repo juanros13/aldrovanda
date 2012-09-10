@@ -88,26 +88,23 @@
             <fieldset>
               <legend>Agregar productos</legend>
               <div class="control-group well">
-                <label class="control-label" for="input01"><h4>Acerca del producto</h4></label>
-                <div class="controls">
-                  <h5>Con que esta hecho el producto?</h5><br/>
-                    <select id="prudcoto1" name="producto1s">
-                    <option value="producto1">uno</option>
-                    <option>uno</option>
-                    <option>uno</option>
-                    <option>uno</option>
-                  </select>
-                </div>
-                <hr/>
                 <label class="control-label" for="input01"><h4>Categorias</h4></label>
                 <div class="controls">
-                  <h5>Que es?</h5><br/>
-                    <select>
-                    <option>uno</option>
-                    <option>uno</option>
-                    <option>uno</option>
-                    <option>uno</option>
-                  </select>
+                 
+                  <div class="row-fluid">
+                    <div class="span3" id="root-category">
+                      <h5>Que es?</h5>
+                      <select id="root-category-select" class="category-select">
+                        <option value="" selected>Selecciona una categoria..</option>
+                        {% for category in categories %}
+                          <option value="{{category.slug}}">{{ category.name }}</option>
+                        {% endfor %}
+                      </select>
+                    </div>
+                    <div class="span3" id="second-categories"></div>
+                    <div class="span3" id="third-categories"></div>
+                    <div class="span3" id="fourth-categories"></div>
+                  </div>
                 </div>
               </div>
               <div class="control-group well">
@@ -141,10 +138,65 @@
                         <div class="add-photos-button" />
                       </li>
                     </ul>
-                    <div id="testtest">asdas</div>
                   </div>
                 </div>
               </div>
+              <div class="control-group well">
+                <label class="control-label" for="input01"><h4>Nombre del producto</h4></label>
+                <div class="controls" style="padding-top:10px">
+                  <input id="name-product" type="text" maxlength="100" />
+                </div>
+                <hr/>
+                <label class="control-label" for="input01"><h4>Descripción</h4></label>
+                <div class="controls" >
+                  <textarea id="description-product" type="text" maxlength="250" ></textarea>
+                </div>
+                <hr/>
+                <label class="control-label" for="input01"><h4>Seccion de la tienda</h4></label>
+                <div class="controls" >
+                  <input id="name-product" type="text" maxlength="100" />
+                </div>
+              </div>
+              <div class="control-group well">
+                <label class="control-label" for="input01"><h4>Para quien?</h4></label>
+                <div class="controls">
+                  <select id="recipent-product"  >
+                    <option>--Selecciona una persona--</option>
+                  </select>
+                </div>
+                <hr/>
+                <label class="control-label" for="input01"><h4>Ocasión</h4></label>
+                <div class="controls" >
+                  <select id="occasiont-product" />
+                    <option>--Selecciona una ocasion--</option>
+                  </select>
+                </div>
+                <hr/>
+                <label class="control-label" for="input01"><h4>Estilo</h4></label>
+                <div class="controls" >
+                  <select id="name-product" >
+                    <option>--Selecciona un estilo--</option>
+                  </select>
+                </div>
+              </div>
+              <div class="control-group well">
+                <label class="control-label" for="input01"><h4>Precio</h4></label>
+                <div class="controls">
+                  <input id="price-product" type="text" maxlength="100" />
+                </div>
+                <hr/>
+                <label class="control-label" for="input01"><h4>Numero de producto</h4></label>
+                <div class="controls" >
+                   <input id="quantity-product" type="text" maxlength="100" />
+                </div>
+                <hr/>
+                <label class="control-label" for="input01"><h4>Envios a</h4></label>
+                <div class="controls" >
+                  <select id="shipping-product" >
+                    <option>--Selecciona un estilo--</option>
+                  </select>
+                </div>
+              </div>    
             </fieldset>
           </form>
         </div>

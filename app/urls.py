@@ -25,6 +25,7 @@ urlpatterns = patterns('',
     url(r'^addFavorite/$', 'aldrovanda.views.addFavorite'),
     url(r'^removeFavorite/$', 'aldrovanda.views.removeFavorite'),
     url(r'^uploadImage/$', 'aldrovanda.views.uploadImage'),
+    url(r'^categoryHierarchy/$', 'aldrovanda.views.categoryHierarchy'),
 
     #url(r'^addProduct/', 'aldrovanda.views.disconnect'),
     url(r'^vender/$', 'aldrovanda.views.sell'),

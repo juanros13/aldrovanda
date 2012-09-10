@@ -1,6 +1,29 @@
 /* Author: Rosales Vargas Juan Roberto @lobo022000
 
 */
+
+$('html').ajaxSend(function(event, xhr, settings) {
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie != '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = $.trim(cookies[i]);
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
+        // Only send the token to relative URLs i.e. locally.
+        xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+    }
+});
+
 $('.dropdown-toggle').dropdown()
 
 $(".img-thumbnail")
@@ -172,39 +195,85 @@ $(".upload-container").mousemove(function(e) {
         top:e.pageY-offT-10
     })
 }); */
-$('#image-upload').live('change', function(){ 
+$('#image-upload').live('change', function(){
+  var inputFile = $(this);
   var options = { 
     url:        '../uploadImage/', 
-    afterSubmit : preloadImage($(this)),
-    success: loadImage($(this)),
+    afterSubmit : preloadImageUpload(inputFile),
+    success: function(imagen){
+        //alert(jqueryWreapper.html());
+        //alert(liImage.html)
+        var liUploadImage = inputFile.parent().parent();
+        liUploadImage.removeClass('state-disabled');
+        liUploadImage.html('<div class="add-photos-button"><img height="80" style="margin:auto;" src="'+imagen+'" /></div>');
+        var liNewUploadImage = liUploadImage.next();
+        liNewUploadImage.html('<div class="upload-container">'+
+                                  '<input type="file" name="image-upload" id="image-upload" class="image-upload" multiple/>'+
+                              '</div>'+
+                              '<div class="add-photos-button">'+
+                                '<div class="image-active-icon">'+
+                                  '<i class="icon-plus-sign icon-blue"></i>'+
+                                '</div>'+
+                                '<span>Add Photos</span>'+
+                              '</div>');
+    },
     target: true
   };
   $("#add-product").ajaxForm(options).submit();
 });
 
-function loadImage(imagen, status, xhr, jqueryWreapper, este){
-  alert(status);
-  var liUploadImage = imagen.parent().parent();
-  //liUploadImage.html('');
-  //liUploadImage.html('<img style="margin:auto;" src="'+imagen+'" />');
-  //liUploadImage.html('<div class="add-photos-button"><img height="70"  style="margin:auto;" src="" /></div>');
-  //liUploadImage.css('background-image', 'url("'+imagen+'")');
-  var liNewUploadImage = liUploadImage.next();
-  liNewUploadImage.html('');
-  //liUploadImage.html('<img style="margin:auto;" src="'+imagen+'" />');
-  liNewUploadImage.html(' <div class="upload-container">'+
-                            '<input type="file" name="image-upload" id="image-upload" class="image-upload" multiple/>'+
-                        '</div>'+
-                        '<div class="add-photos-button">'+
-                          '<div class="image-active-icon">'+
-                            '<i class="icon-plus-sign icon-blue"></i>'+
-                          '</div>'+
-                          '<span>Add Photos</span>'+
-                        '</div>');
+$('select.category-select').live("change", function(){
+  //alert($(this).val());
+  var category    = $(this).val(),
+  levelCategory   = ["second-categories","third-categories","fourth-categories"];
+  levelCategoryDivName   = ["second-categories","third-categories","fourth-categories"];
+  //alert(category);
+  $.post('/categoryHierarchy/', {'category':category}, function(json) {
+    //alert(json);
+    if (json.success) {
+      //alert('OK');
+      //alert(json.level);
+      if(json.categories){
+        if(json.level){
+          preloadImage(levelCategory[json.level]);
+        }
+        //alert('#'+levelCategory[json.level]);
+        $('#'+levelCategory[json.level]).html("<h5>De que tipo?</h5>"+createSelect(levelCategory[json.level]+"-select", "category-select", json.categories, {"value":"", "name": "--Selecciona un tipo--"}));
+      }else{
+        $('#'+levelCategory[json.level]).html('');
+      }
+    }else{
+      alert('Tuvimos un problema');
+    }
+    return;
+  }) 
+});
+
+function preloadImage(target, image){
 
 }
-function preloadImage(liImagen){
-  var liUploadImage = liImagen.parent().parent().find(".add-photos-button");
+
+function preloadImageUpload(inputFile){
+  var liUploadImage = inputFile.parent().parent().find(".add-photos-button");
   liUploadImage.html('');
   liUploadImage.html('<img style="margin:auto;padding-top:20px;"src="../static/img/preloded_upload_image.gif" />');
+}
+function createSelect(id, nameclass, data, dataDefault){
+  //alert(nameclass);
+  var result = '<select id="'+id+'"  class="'+nameclass+'" >';
+  
+  if(data){
+    if(dataDefault){
+      //alert('wtf');
+      result += '<option value="'+dataDefault.value+'"" selected>'+dataDefault.name+'</option>';
+    }
+    $.each(data, function(key, value) {
+      result += '<option value="'+key+'"">'+value+'</option>';
+    });
+  }else{
+    result
+  }
+  result += '</select>';
+  //alert(result);
+  return result;
 }
