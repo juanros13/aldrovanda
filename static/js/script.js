@@ -234,9 +234,8 @@ $('select.category-select').live("change", function(){
       //alert('OK');
       //alert(json.level);
       if(json.categories){
-        if(json.level){
-          preloadImage(levelCategory[json.level]);
-        }
+
+        preloadImage(levelCategory[json.level], 'preloded_30X30_blue', {'margin':'auto', 'padding-top':'40px'});
         //alert('#'+levelCategory[json.level]);
         $('#'+levelCategory[json.level]).html("<h5>De que tipo?</h5>"+createSelect(levelCategory[json.level]+"-select", "category-select", json.categories, {"value":"", "name": "--Selecciona un tipo--"}));
       }else{
@@ -249,13 +248,20 @@ $('select.category-select').live("change", function(){
   }) 
 });
 
-function preloadImage(target, image){
-
+function preloadImage(target, nameImage, style){
+  //alert(target);
+  contentHtml=$('#'+target);
+  //styles=style.join(';') 
+  var styleInline = '';
+  $.each(style, function(key, value) {
+    styleInline +=key+":"+value+";";
+  });
+  //alert(styleInline);
+  contentHtml.html('<img style="'+styleInline+'" src="../static/img/'+nameImage+'.gif" />');
 }
 
 function preloadImageUpload(inputFile){
   var liUploadImage = inputFile.parent().parent().find(".add-photos-button");
-  liUploadImage.html('');
   liUploadImage.html('<img style="margin:auto;padding-top:20px;"src="../static/img/preloded_upload_image.gif" />');
 }
 function createSelect(id, nameclass, data, dataDefault){
