@@ -8,151 +8,23 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding model 'UserDefault'
-        db.create_table('aldrovanda_userdefault', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('user', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['auth.User'], unique=True)),
-            ('facebook_id', self.gf('django.db.models.fields.CharField')(max_length=300)),
-            ('facebook_token', self.gf('django.db.models.fields.CharField')(max_length=450)),
-        ))
-        db.send_create_signal('aldrovanda', ['UserDefault'])
+        # Deleting field 'Shop.product'
+        db.delete_column('aldrovanda_shop', 'product_id')
 
-        # Adding model 'Category'
-        db.create_table('aldrovanda_category', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=200)),
-            ('slug', self.gf('django.db.models.fields.SlugField')(max_length=50)),
-            ('description', self.gf('django.db.models.fields.TextField')(blank=True)),
-            ('parent', self.gf('mptt.fields.TreeForeignKey')(blank=True, related_name='children', null=True, to=orm['aldrovanda.Category'])),
-            ('full_slug', self.gf('django.db.models.fields.CharField')(max_length=255, blank=True)),
-            ('lft', self.gf('django.db.models.fields.PositiveIntegerField')(db_index=True)),
-            ('rght', self.gf('django.db.models.fields.PositiveIntegerField')(db_index=True)),
-            ('tree_id', self.gf('django.db.models.fields.PositiveIntegerField')(db_index=True)),
-            ('level', self.gf('django.db.models.fields.PositiveIntegerField')(db_index=True)),
-        ))
-        db.send_create_signal('aldrovanda', ['Category'])
-
-        # Adding model 'Recipient'
-        db.create_table('aldrovanda_recipient', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=50)),
-        ))
-        db.send_create_signal('aldrovanda', ['Recipient'])
-
-        # Adding model 'Occasion'
-        db.create_table('aldrovanda_occasion', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=50)),
-        ))
-        db.send_create_signal('aldrovanda', ['Occasion'])
-
-        # Adding model 'Style'
-        db.create_table('aldrovanda_style', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=50)),
-        ))
-        db.send_create_signal('aldrovanda', ['Style'])
-
-        # Adding model 'Tag'
-        db.create_table('aldrovanda_tag', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=50)),
-        ))
-        db.send_create_signal('aldrovanda', ['Tag'])
-
-        # Adding model 'Product'
-        db.create_table('aldrovanda_product', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=150)),
-            ('description', self.gf('django.db.models.fields.TextField')()),
-            ('stock', self.gf('django.db.models.fields.IntegerField')()),
-            ('price', self.gf('django.db.models.fields.DecimalField')(max_digits=10, decimal_places=2)),
-            ('creation_date', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
-            ('max_images', self.gf('django.db.models.fields.IntegerField')(default=5)),
-            ('category', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['aldrovanda.Category'])),
-            ('user', self.gf('django.db.models.fields.related.ForeignKey')(default=None, to=orm['auth.User'])),
-            ('style', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['aldrovanda.Style'], null=True)),
-            ('occasion', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['aldrovanda.Occasion'], null=True)),
-            ('recipient', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['aldrovanda.Recipient'], null=True)),
-        ))
-        db.send_create_signal('aldrovanda', ['Product'])
-
-        # Adding M2M table for field tag on 'Product'
-        db.create_table('aldrovanda_product_tag', (
-            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
-            ('product', models.ForeignKey(orm['aldrovanda.product'], null=False)),
-            ('tag', models.ForeignKey(orm['aldrovanda.tag'], null=False))
-        ))
-        db.create_unique('aldrovanda_product_tag', ['product_id', 'tag_id'])
-
-        # Adding model 'Shop'
-        db.create_table('aldrovanda_shop', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=50)),
-            ('header', self.gf('django.db.models.fields.TextField')()),
-            ('product', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['aldrovanda.Product'], null=True)),
-        ))
-        db.send_create_signal('aldrovanda', ['Shop'])
-
-        # Adding model 'Image'
-        db.create_table('aldrovanda_image', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('product', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['aldrovanda.Product'])),
-            ('image', self.gf('django.db.models.fields.files.ImageField')(max_length=100)),
-            ('default', self.gf('django.db.models.fields.BooleanField')(default=False)),
-            ('creation_date', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
-            ('order', self.gf('django.db.models.fields.IntegerField')()),
-        ))
-        db.send_create_signal('aldrovanda', ['Image'])
-
-        # Adding model 'Favorite'
-        db.create_table('aldrovanda_favorite', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('product', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['aldrovanda.Product'])),
-            ('user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'])),
-        ))
-        db.send_create_signal('aldrovanda', ['Favorite'])
-
-        # Adding unique constraint on 'Favorite', fields ['product', 'user']
-        db.create_unique('aldrovanda_favorite', ['product_id', 'user_id'])
+        # Adding field 'Product.shop'
+        db.add_column('aldrovanda_product', 'shop',
+                      self.gf('django.db.models.fields.related.ForeignKey')(default=1, to=orm['aldrovanda.Shop']),
+                      keep_default=False)
 
 
     def backwards(self, orm):
-        # Removing unique constraint on 'Favorite', fields ['product', 'user']
-        db.delete_unique('aldrovanda_favorite', ['product_id', 'user_id'])
+        # Adding field 'Shop.product'
+        db.add_column('aldrovanda_shop', 'product',
+                      self.gf('django.db.models.fields.related.ForeignKey')(to=orm['aldrovanda.Product'], null=True),
+                      keep_default=False)
 
-        # Deleting model 'UserDefault'
-        db.delete_table('aldrovanda_userdefault')
-
-        # Deleting model 'Category'
-        db.delete_table('aldrovanda_category')
-
-        # Deleting model 'Recipient'
-        db.delete_table('aldrovanda_recipient')
-
-        # Deleting model 'Occasion'
-        db.delete_table('aldrovanda_occasion')
-
-        # Deleting model 'Style'
-        db.delete_table('aldrovanda_style')
-
-        # Deleting model 'Tag'
-        db.delete_table('aldrovanda_tag')
-
-        # Deleting model 'Product'
-        db.delete_table('aldrovanda_product')
-
-        # Removing M2M table for field tag on 'Product'
-        db.delete_table('aldrovanda_product_tag')
-
-        # Deleting model 'Shop'
-        db.delete_table('aldrovanda_shop')
-
-        # Deleting model 'Image'
-        db.delete_table('aldrovanda_image')
-
-        # Deleting model 'Favorite'
-        db.delete_table('aldrovanda_favorite')
+        # Deleting field 'Product.shop'
+        db.delete_column('aldrovanda_product', 'shop_id')
 
 
     models = {
@@ -200,10 +72,10 @@ class Migration(SchemaMigration):
             'occasion': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['aldrovanda.Occasion']", 'null': 'True'}),
             'price': ('django.db.models.fields.DecimalField', [], {'max_digits': '10', 'decimal_places': '2'}),
             'recipient': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['aldrovanda.Recipient']", 'null': 'True'}),
+            'shop': ('django.db.models.fields.related.ForeignKey', [], {'default': 'None', 'to': "orm['aldrovanda.Shop']"}),
             'stock': ('django.db.models.fields.IntegerField', [], {}),
             'style': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['aldrovanda.Style']", 'null': 'True'}),
-            'tag': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['aldrovanda.Tag']", 'null': 'True', 'symmetrical': 'False'}),
-            'user': ('django.db.models.fields.related.ForeignKey', [], {'default': 'None', 'to': "orm['auth.User']"})
+            'tag': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['aldrovanda.Tag']", 'null': 'True', 'symmetrical': 'False'})
         },
         'aldrovanda.recipient': {
             'Meta': {'object_name': 'Recipient'},
@@ -215,7 +87,7 @@ class Migration(SchemaMigration):
             'header': ('django.db.models.fields.TextField', [], {}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '50'}),
-            'product': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['aldrovanda.Product']", 'null': 'True'})
+            'user': ('django.db.models.fields.related.ForeignKey', [], {'default': 'None', 'to': "orm['auth.User']"})
         },
         'aldrovanda.style': {
             'Meta': {'object_name': 'Style'},

@@ -28,9 +28,9 @@ $('.dropdown-toggle').dropdown()
 
 $(".img-thumbnail")
     .click(function() { 
-      var src = $(this).attr("src");
-      var src = src.split('.');
-      //alert(src[0]);
+    	var src = $(this).attr("src");
+    	var src = src.split('.');
+    	//alert(src[0]);
         $(".img-sorce").attr("src", src[0]+"."+src[1]+".600x600_q85_crop.jpg");
         $(".img-sorce").parent("a").attr("href", src[0]+"."+src[1])
     })
@@ -74,23 +74,23 @@ $('#id-login-form').validate({
     label.closest('.control-group').removeClass('error');
   },
   submitHandler: function() {
-      //Get the data from all the fields
+	    //Get the data from all the fields
       var $form     = $('#id-login-form'),
       data          = $form.serializeArray(),
       $error        = $form.find('div.alert-error:first')
       header_error  = '<h4 class="alert-heading">Error</h4>';
 
-      $.post('/login/', data, function(json) {
-        if (json.success) {
-          location.reload();
-        } else {
+			$.post('/login/', data, function(json) {
+		    if (json.success) {
+	        location.reload();
+		    } else {
           $error.html(header_error+json.msg).slideDown(400).delay(1500).slideUp(400);
         }
         return;
-          // Etc ...
-      }) 
-      .error(function(e) { alert('error'+e); });
-  },
+			    // Etc ...
+			}) 
+			.error(function(e) { alert('error'+e); });
+	},
 });
 //Validacion de la forma para Registrarse
 $('#id-register-form').validate(
@@ -128,7 +128,7 @@ success: function(label) {
   label.closest('.control-group').removeClass('error');
 },
 //submitHandler: function() {
-    //alert("submit! use link below to go to the other step");
+		//alert("submit! use link below to go to the other step");
 //},
 });
 
@@ -283,3 +283,26 @@ function createSelect(id, nameclass, data, dataDefault){
   //alert(result);
   return result;
 }
+$('#tags-product').typeahead({
+  source:function (query, process) {
+    $.post('/getTags/', { query: query }, function (data) {
+      //alert(data);
+      return process(data);
+    });
+  },
+  minLength:3,
+  items:15
+});
+$('#materials-product').typeahead({
+  source:function (query, process) {
+    $.post('/getMaterials/', { query: query }, function (data) {
+      //alert(data);
+      return process(data);
+    });
+  },
+  minLength:3,
+  items:15
+});
+$('#tags-product, #materials-product').keyup(function(){
+    this.value = this.value.toLowerCase();
+});

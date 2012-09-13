@@ -161,22 +161,44 @@
                 <label class="control-label" for="input01"><h4>Para quien?</h4></label>
                 <div class="controls">
                   <select id="recipent-product"  >
-                    <option>--Selecciona una persona--</option>
+                    <option value="">--Selecciona una persona--</option>
+                    {% for recipient in recipients %}
+                      <option value="{{ recipient.slug }}">{{ recipient.name }}</option>
+                    {% endfor %}
                   </select>
                 </div>
                 <hr/>
                 <label class="control-label" for="input01"><h4>Ocasión</h4></label>
                 <div class="controls" >
                   <select id="occasiont-product" />
-                    <option>--Selecciona una ocasion--</option>
+                    <option value="">--Selecciona una ocasion--</option>
+                    {% for occasion in occasions %}
+                      <option value="{{ occasion.slug }}">{{ occasion.name }}</option>
+                    {% endfor %}
                   </select>
                 </div>
                 <hr/>
                 <label class="control-label" for="input01"><h4>Estilo</h4></label>
                 <div class="controls" >
-                  <select id="name-product" >
-                    <option>--Selecciona un estilo--</option>
+                  <select id="style-product" >
+                    <option value="">--Selecciona un estilo--</option>
+                    {% for style in styles %}
+                      <option value="{{ style.slug }}">{{ style.name }}</option>
+                    {% endfor %}
                   </select>
+                </div>
+              </div>
+              <div class="control-group well">
+                <label class="control-label" for="input01"><h4>Tags</h4></label>
+                <div class="controls">
+                   <input id="tags-product" type="text" maxlength="100" />
+                   <button class="btn btn-small btn-info" type="button">Añadir</button>
+                </div>
+                <hr/>
+                <label class="control-label" for="input01"><h4>Materiales</h4></label>
+                <div class="controls" >
+                   <input id="materials-product" type="text" maxlength="100" />
+                   <button class="btn btn-small btn-info" type="button">Añadir</button>
                 </div>
               </div>
               <div class="control-group well">

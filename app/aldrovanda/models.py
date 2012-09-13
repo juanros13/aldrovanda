@@ -23,6 +23,8 @@ def create_user_profile(sender, instance, created, **kwargs):
 
 post_save.connect(create_user_profile, sender=User)
 
+
+
 class Category(MPTTModel):
 	name = models.CharField(max_length=200)
 	slug = models.SlugField()
@@ -50,6 +52,60 @@ class Category(MPTTModel):
 	def __unicode__(self):
 		return self.name
 
+class Recipient(models.Model):
+	name = models.CharField(max_length=50)
+	slug = models.CharField(max_length=50)
+	class Meta:
+		verbose_name = "Para quien"
+		verbose_name_plural = "Para quienes"
+
+	def __unicode__(self):
+		return self.name
+
+class Occasion(models.Model):
+	name = models.CharField(max_length=50)
+	slug = models.CharField(max_length=50)
+	class Meta:
+		verbose_name = "Ocasion"
+		verbose_name_plural = "Ocasiones"
+
+	def __unicode__(self):
+		return self.name
+class Style(models.Model):
+	name = models.CharField(max_length=50)
+	slug = models.CharField(max_length=50)
+	class Meta:
+		verbose_name = "Estilo"
+		verbose_name_plural = "Estilos"
+
+	def __unicode__(self):
+		return self.name
+class Tag(models.Model):
+	name = models.CharField(max_length=50)
+	class Meta:
+		verbose_name = "Tag"
+		verbose_name_plural = "Tags"
+
+	def __unicode__(self):
+		return self.name
+class Material(models.Model):
+	name = models.CharField(max_length=50)
+	class Meta:
+		verbose_name = "Material"
+		verbose_name_plural = "Materiales"
+
+	def __unicode__(self):
+		return self.name
+class Shop(models.Model):
+	name = models.CharField(max_length=50)
+	header = models.TextField()
+	user = models.ForeignKey(User, default = None, blank=False, null=False)
+	class Meta:
+		verbose_name = "Tienda"
+		verbose_name_plural = "Tiendas"
+
+	def __unicode__(self):
+		return self.name
 class Product(models.Model):
 	name = models.CharField(
 		max_length = 150, 
@@ -74,7 +130,12 @@ class Product(models.Model):
 		default = 5
 	)
 	category = models.ForeignKey(Category)
-	user = models.ForeignKey(User, default = None, blank=False, null=False)
+	shop = models.ForeignKey(Shop, default = None, blank=False, null=False)
+	tag = models.ManyToManyField(Tag, null=True)
+	material = models.ManyToManyField(Material, null=True)
+	style = models.ForeignKey(Style, null=True)
+	occasion = models.ForeignKey(Occasion, null=True)
+	recipient = models.ForeignKey(Recipient, null=True)
 	def get_absolute_url(self):
 		return "/productos/%s/" % self.id
 	def admin_image(self):
@@ -91,6 +152,8 @@ class Product(models.Model):
 		verbose_name_plural = "Productos"
 	def __unicode__(self):
 		return self.name
+
+
 
 class Image(models.Model):
 	product = models.ForeignKey(Product)

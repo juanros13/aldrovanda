@@ -11,7 +11,7 @@ from django.views.decorators.http import require_POST
 from django.contrib.auth.models import User
 from django.contrib.auth import logout
 from django.utils import simplejson
-from aldrovanda.models import Product, Image, Category, UserDefault, Favorite
+from aldrovanda.models import Product, Image, Category, UserDefault, Favorite, Tag, Shop, Style, Occasion, Recipient, Material
 from aldrovanda.paginator import Paginator
 from easy_thumbnails.files import get_thumbnailer
 from mptt.utils import *
@@ -287,8 +287,16 @@ def removeFavorite(request):
 
 def sell(request):
 	categories = Category.objects.filter(parent__isnull=True)
+	styles = Style.objects.all()
+	recipients = Recipient.objects.all()
+	occasions = Occasion.objects.all()
+	tags = Tag.objects.all()
 	return render_to_response('aldrovanda/sell.html', {
-		'categories' : categories
+		'categories' : categories,
+		'styles' : styles,
+		'recipients' : recipients,
+		'occasions' : occasions,
+		'tags' : tags,
 	}, context_instance=RequestContext(request))
 	
 @require_POST
@@ -324,5 +332,29 @@ def categoryHierarchy(request):
 	#print request.POST['category']
 	#print categories
 	#to_return['categories'] = data
+	serialized = simplejson.dumps(to_return)
+	return HttpResponse(serialized, mimetype="application/json")
+
+@require_POST
+def getTags(request):
+	query_tag = request.POST['query']
+	#test= query_tag, '%'
+	tags = Tag.objects.filter(name__icontains=query_tag)
+	to_return = []
+	if tags:
+			for tag in tags:
+				to_return.append(tag.name)
+	serialized = simplejson.dumps(to_return)
+	return HttpResponse(serialized, mimetype="application/json")
+
+@require_POST
+def getMaterials(request):
+	query_tag = request.POST['query']
+	#test= query_tag, '%'
+	materials = Material.objects.filter(name__icontains=query_tag)
+	to_return = []
+	if materials:
+			for material in materials:
+				to_return.append(material.name)
 	serialized = simplejson.dumps(to_return)
 	return HttpResponse(serialized, mimetype="application/json")
