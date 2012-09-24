@@ -180,7 +180,7 @@ $( "#photos" ).sortable({
   update: function(event, ui) {
     var info = $(this).sortable("serialize");
     //$("#sort1output").html(info);
-    alert(ui.item.index());
+    //alert(ui.item.index());
   }
 });
 $( "#photos" ).disableSelection();
@@ -226,7 +226,6 @@ $('select.category-select').live("change", function(){
   //alert($(this).val());
   var category    = $(this).val(),
   levelCategory   = ["second-categories","third-categories","fourth-categories"];
-  levelCategoryDivName   = ["second-categories","third-categories","fourth-categories"];
   //alert(category);
   $.post('/categoryHierarchy/', {'category':category}, function(json) {
     //alert(json);
@@ -237,7 +236,7 @@ $('select.category-select').live("change", function(){
 
         preloadImage(levelCategory[json.level], 'preloded_30X30_blue', {'margin':'auto', 'padding-top':'40px'});
         //alert('#'+levelCategory[json.level]);
-        $('#'+levelCategory[json.level]).html("<h5>De que tipo?</h5>"+createSelect(levelCategory[json.level]+"-select", "category-select", json.categories, {"value":"", "name": "--Selecciona un tipo--"}));
+        $('#'+levelCategory[json.level]).html("<label>¿De que tipo?</label>"+createSelect(levelCategory[json.level]+"-select", "category-select", json.categories, {"value":"", "name": "--Selecciona un tipo--"}));
       }else{
         $('#'+levelCategory[json.level]).html('');
       }
@@ -283,26 +282,140 @@ function createSelect(id, nameclass, data, dataDefault){
   //alert(result);
   return result;
 }
+
 $('#tags-product').typeahead({
   source:function (query, process) {
-    $.post('/getTags/', { query: query }, function (data) {
-      //alert(data);
-      return process(data);
-    });
+    if(query.length>=3 && query.length<=5){
+      $.post('/getTags/', { query: query }, function (data) {
+        //alert(data);
+        return process(data);
+      });
+    }
   },
   minLength:3,
   items:15
 });
 $('#materials-product').typeahead({
   source:function (query, process) {
-    $.post('/getMaterials/', { query: query }, function (data) {
-      //alert(data);
-      return process(data);
-    });
+    if(query.length>=3 && query.length<=5){
+      $.post('/getMaterials/', { query: query }, function (data) {
+        //alert(data);
+        return process(data);
+      });
+    }
   },
   minLength:3,
   items:15
 });
+
+
 $('#tags-product, #materials-product').keyup(function(){
     this.value = this.value.toLowerCase();
+});
+$.fn.sort_select_box = function(){
+    var my_options = $("#" + this.attr('id') + ' option');
+    my_options.sort(function(a,b) {
+        if (a.text > b.text) return 1;
+        else if (a.text < b.text) return -1;
+        else return 0
+    })
+   return my_options;
+}
+$('.tag').live('close', function () {
+  var button = $(this).find('button'),
+  inputHidden = $(this).find('input'),
+  arrayInput = button.attr('id').split('--'),
+  inputVal = arrayInput[1],
+  inputText = arrayInput[2],
+  inputTarget = $('#'+arrayInput[0]);
+
+  if(inputTarget.is('select')){
+    //inputTarget[options.length] = new Option(inputHidden.val(), inputHidden.val(), true, true);
+    inputTarget.append(new Option(inputText,inputVal, true, true));
+
+    //ordenando las opciones orden alfabetico
+    var my_options = $("#"+arrayInput[0]+" option");
+
+    my_options.sort(function(a,b) {
+        if (a.text > b.text) return 1;
+        else if (a.text < b.text) return -1;
+        else return 0
+    })
+
+    inputTarget.empty().append( my_options );
+    inputTarget.val('');
+  }
+  
+
+  //alert(inputTarget.attr('id'));
+  if(inputTarget.is(':disabled')){
+    inputTarget.removeAttr('disabled');
+  }
+})
+
+$('#style-product').change(function(){
+  addTag('styles', 'style-product', 2);
+});
+
+$('#add-tag').click(function(){
+  addTag('tags', 'tags-product', 5);
+});
+$('#add-material').click(function(){
+  //Si tiene algo el input de tag agregarlo de lo contrario no hacer nada
+  addTag('materials', 'materials-product', 5);
+});
+function addTag(target, inputName, maximNumberOfItems){
+  var target = $('#'+target),
+  numberOfItems = target.children().length,
+  input = $('#'+inputName);
+  //alert(numberOfItems);
+  if(input.val()!=''){
+    
+    target.append('<span class="tag">'+
+      '<button type="button" class="close" data-dismiss="alert" id="'+inputName+'--'+input.val()+'--'+input.find("option:selected").text()+'" >&times;</button>'+
+      input.val()+
+      '<input type="hidden" name="'+inputName+'['+target.length+']"  value="'+input.val()+'" />'+
+    '</span>');
+    if(input.is('select')){
+      //alert("es un maldito select");
+      input.find('[value="'+input.val()+'"]').remove();
+    }else{
+      input.val('');  
+    }
+    if(numberOfItems>=maximNumberOfItems-1){
+      input.attr("disabled", "disabled");
+    }
+  } 
+}
+$('#add-shop').validate({
+  ignoreTitle: true,
+  debug: true,
+  rules: {
+    shop: {
+      minlength: 4,
+      required: true,
+    },
+
+  },
+  messages: {
+    shop: {
+      required: "El nombre de al tienda no puede estar en blanco.",
+      minlength: "El nombre de la tienda debe tener mimino 4 caracteres",  
+    }
+    
+  },
+  errorLabelContainer: ".help-block",
+  highlight: function(label) {
+    $(".help-block").html('');
+    $(label).closest('.control-group').addClass('error');
+  },
+  success: function(label) {
+    label.closest('.control-group').removeClass('error');
+    $(".help-block").remove();
+    $("#error-content").html('<span class="help-block">Puedes cambiar el nombre de la tienda despues.</span>');
+    //alert("success");
+  },
+  submitHandler: function() {
+    alert("enviando");
+  },
 });

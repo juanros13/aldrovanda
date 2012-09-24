@@ -1,0 +1,292 @@
+{% extends "aldrovanda/base.html" %}
+
+{% block title %}Vender en Aldrovanda{% endblock %}
+{% block header %}
+<div class="container" >
+  <div class="row-fluid">
+    <div class="span8" >
+      <a class="brand" href="{% url aldrovanda.views.index %}">Aldrovanda</a>
+    </div>
+    <div class="span4 pull-right" >
+      <div class="pull-right">
+        {{ user }} <a href="#">Logout</a> | <a href="#">Ayuda</a>
+      </div>
+      
+    </div>
+  </div>    
+</div>
+<div class="container" >
+  <ul class="steps">
+    <li class="step-1" >
+      <a href="/your/shops/lobo022000/name" class="tt-hover-b  completed" rel="tooltip" title="Choose a shop name.">
+        <div class="step-inner">
+          Shop Name<span class="completed-indicator"></span>
+        </div>
+      </a>
+      
+    </li>
+    <li class="step-2">
+      <a href="/your/listings/create" class="tt-hover-b active " rel="tooltip" title="What are you going to sell? Add and edit listings here.">
+        <div class="step-inner">
+          List Items<span class="completed-indicator"></span>
+        </div>
+      </a>
+    </li>
+    <li class="step-3">
+      <a href="/your/shops/lobo022000/payments" class="tt-hover-b  " rel="tooltip" title="Choose your shop payment methods.">
+        <div class="step-inner">
+            Get Paid<span class="completed-indicator"></span>
+        </div>
+      </a>
+    </li>
+    <li class="step-4">
+      <a href="/your/account/billing" class="tt-hover-b  "  rel="tooltip" title="Enter the credit card you want to use to pay your bill.">
+        <div class="step-inner">
+          Billing<span class="completed-indicator"></span>
+        </div>
+      </a>
+    </li>
+    <li class="step-5">
+      <a>
+        <div class="step-inner">
+          Open Shop
+          <span class="completed-indicator"></span>
+        </div>
+      </a>
+    </li>
+    <li class="preview">
+      <a class="tt-hover-b " href="/your/shops/lobo022000/preview" rel="tooltip" title="Preview your shop page.">
+        <div class="step-inner">
+          Preview
+        </div>
+      </a>
+    </li>
+  </ul>
+</div>
+{% endblock %}
+
+{% block body %}
+{% load mptt_tags %}
+<div class="container">
+  <div class="row">
+    <ul id="myTab" class="nav nav-tabs">
+      <li class="active">
+        <a href="#agregar" data-toggle="tab">
+          <h4><small>Agrega producto</small></h4>
+        </a>
+      </li>
+      <li>
+        <a href="#manejar" data-toggle="tab">
+          <h4><small>Manejar productos</small></h4>
+        </a>
+      </li>
+    </ul>
+    <div class="span10 offset1">
+      <div id="myTabContent" class="tab-content">
+        <div class="tab-pane fade in active" id="agregar">
+          <form id="add-product" name="add-product" method="post"  action='../uploadImage/'  enctype="multipart/form-data" class="form-horizontal">{% csrf_token %}
+            <fieldset>
+              <legend>Agregar productos</legend>
+              <div class="control-group well">
+                <label class="control-label" for="input01"><strong>Categorias</strong></label>
+                <div class="controls">
+                  <div class="row-fluid">
+                    <div class="span4" id="root-category">
+                      <label>¿Que es?</label>
+                      <select id="root-category-select" class="category-select">
+                        <option value="" selected>Selecciona una categoria..</option>
+                        {% for category in categories %}
+                          <option value="{{category.slug}}">{{ category.name }}</option>
+                        {% endfor %}
+                      </select>
+                    </div>
+                    <div class="span4" id="second-categories"></div>
+                    <div class="span4" id="third-categories"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="control-group well">
+                <label class="control-label" for="input01"><strong>Fotografias</strong></label>
+                <div class="controls">
+                  <div>
+                    <ul id="photos">
+                      <li class="state-disabled">
+                         <!--[if IE 7]>
+                            <style type="text/css">
+                                input#image-upload { width: 100px;}
+                            </style>
+                        <![endif]-->
+                        <div class="upload-container">
+                            <input type="file" name="image-upload" id="image-upload" class="image-upload" multiple/>
+                        </div>
+                        <div class="add-photos-button">
+                          <div class="image-active-icon">
+                            <i class="icon-plus-sign icon-blue"></i>
+                          </div>
+                          <span>Add Photos</span>
+                        </div>
+                      </li>
+                      <li class="state-disabled">
+                        <div class="add-photos-button" />
+                      </li>
+                      <li class="state-disabled">
+                        <div class="add-photos-button" />
+                      </li>
+                      <li class="state-disabled">
+                        <div class="add-photos-button" />
+                      </li>
+                      <li class="state-disabled">
+                        <div class="add-photos-button" />
+                      </li>
+                    </ul>
+                  </div>
+
+                </div>
+              </div>
+              <div class="well">
+                <div class="control-group">
+                  <label class="control-label" for="input01"><strong>Nombre del producto</strong></label>
+                  <div class="controls">
+                    <input id="name-product" class="input-xxlarge" type="text" maxlength="100" />
+                    <span class="help-block">Example block-level help text here.</span>
+                  </div>
+                </div>
+                <hr/>
+                <div class="control-group">  
+                  <label class="control-label" for="input01"><strong>Descripción</strong></label>
+                  <div class="controls" >
+                    <textarea id="description-product" class="input-xxlarge" rows="5" type="text" maxlength="250" ></textarea>
+                    <span class="help-block">Example block-level help text here.</span>
+                  </div>
+                </div>
+                <hr/>
+                <div class="control-group">
+                  <label class="control-label" for="input01"><strong>Seccion de la tienda</strong></label>
+                  <div class="controls" >
+                    <input id="name-product" type="text" maxlength="100" />
+                  </div>
+                </div>
+              </div>
+              <div class="well">
+                <div class="control-group">
+                  <label class="control-label" for="input01"><strong>Para quien?</strong></label>
+                  <div class="controls">
+                    <select id="recipent-product"  >
+                      <option value="">--Selecciona una persona--</option>
+                      {% for recipient in recipients %}
+                        <option value="{{ recipient.slug }}">{{ recipient.name }}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                </div>  
+                <hr/>
+                <div class="control-group">
+                  <label class="control-label" for="input01"><strong>Ocasión</strong></label>
+                  <div class="controls" >
+                    <select id="occasiont-product" />
+                      <option value="">--Selecciona una ocasion--</option>
+                      {% for occasion in occasions %}
+                        <option value="{{ occasion.slug }}">{{ occasion.name }}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                </div>
+                <hr/>
+                <div class="control-group">
+                  <label class="control-label" for="input01"><strong>Estilo</strong></label>
+                  <div class="controls" >
+                    <div class="row-fluid">
+                      <div class="span4">
+                        <select id="style-product" >
+                          <option value="">--Selecciona un estilo--</option>
+                          {% for style in styles %}
+                            <option value="{{ style.slug }}">{{ style.name }}</option>
+                          {% endfor %}
+                        </select>
+                        <span class="help-block">Selecciona hasta 2 estilos.</span>
+                      </div>
+                      <div class="span8">
+                        <div id="styles" class="tags">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <hr/>
+                <div class="control-group">
+                  <label class="control-label" for="input01"><strong>Tags</strong></label>
+                  <div class="controls">
+                    <div class="row-fluid">
+                      <div class="span5">
+                        <div class="input-append">
+                          <input id="tags-product" type="text" maxlength="100" />
+                          <button id="add-tag" class="btn btn-info" type="button">Añadir</button>
+                        </div>
+                        <span class="help-block">Selecciona hasta 5 Tags.</span>
+                      </div>
+                      <div class="span7">
+                        <div id="tags" class="tags">
+                        </div>
+                      </div> 
+                    </div>
+                  </div>
+                </div>
+                <hr/>
+                <div class="control-group">
+                  <label class="control-label" for="input01"><strong>Materiales</strong></label>
+                  <div class="controls" >
+                    <div class="row-fluid">
+                      <div class="span5">
+                        <div class="input-append">
+                          <input id="materials-product" type="text" maxlength="100" />
+                          <button id="add-material" class="btn btn-info" type="button">Añadir</button>
+                        </div>
+                        <span class="help-block">Selecciona hasta 5 Materiales.</span>
+                      </div>
+                      <div class="span7">
+                        <div id="materials" class="tags">
+                          
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="well">
+                <div class="control-group">
+                  <label class="control-label" for="input01"><strong>Precio</strong></label>
+                  <div class="controls">
+                    <div class="input-prepend input-append">
+                      <span class="add-on">$</span>
+                      <input id="price-product" class="input-small" type="text" maxlength="100" />
+                    </div>
+                  </div>
+                </div>
+                <hr/>
+                <div class="control-group">
+                  <label class="control-label" for="input01"><strong>Stock</strong></label>
+                  <div class="controls" >
+                     <input id="quantity-product" class="input-small" type="text" maxlength="100" />
+                  </div>
+                  <hr/>
+                  <label class="control-label" for="input01"><strong>Envios a</strong></label>
+                  <div class="controls" >
+                    <select id="shipping-product" >
+                      <option>--Selecciona un estilo--</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <button class="btn btn-large btn-primary" type="button">Vista previa</button> 
+            </fieldset>
+          </form>
+        </div>
+        <div class="tab-pane fade" id="manejar">
+          <p>Food truck fixie locavore, accusamus mcsweeney's marfa nulla single-origin coffee squid. Exercitation +1 labore velit, blog sartorial PBR leggings next level wes anderson artisan four loko farm-to-table craft beer twee. Qui photo booth letterpress, commodo enim craft beer mlkshk aliquip jean shorts ullamco ad vinyl cillum PBR. Homo nostrud organic, assumenda labore aesthetic magna delectus mollit. Keytar helvetica VHS salvia yr, vero magna velit sapiente labore stumptown. Vegan fanny pack odio cillum wes anderson 8-bit, sustainable jean shorts beard ut DIY ethical culpa terry richardson biodiesel. Art party scenester stumptown, tumblr butcher vero sint qui sapiente accusamus tattooed echo park.</p>
+        </div>
+      </div>
+    </div>
+
+  </div><!--/row-->
+</div><!--/container-->
+{% endblock %}

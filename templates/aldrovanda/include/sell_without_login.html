@@ -1,0 +1,20 @@
+<div class="container">
+  <div class="row-fluid">
+    
+    <div class="span12">
+        
+        <div class="hero-unit">
+        <h1>Convierte tu pasion en un negocio.</h1>
+        <p>This is a template for a simple marketing or informational website. It includes a large callout called the hero unit and three supporting pieces of content. Use it as a starting point to create something more unique.</p>
+        <p>
+          <a alt="Añadir a favoritos" {% if user.is_authenticated %}class="btn btn-mini btn-favorite" href="#"{% else %}class="btn btn-primary btn-large btn-info" data-toggle="modal" href="#login_modal"{% endif %} >
+              <i class="icon-user icon-white" id="9999"></i>
+                Abre tu tienda
+            </a>
+        </p>
+        </div>
+             
+    </div><!--/span-->
+
+  </div><!--/row-->
+</div><!--/container-->

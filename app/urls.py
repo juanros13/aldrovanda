@@ -31,6 +31,10 @@ urlpatterns = patterns('',
 
     #url(r'^addProduct/', 'aldrovanda.views.disconnect'),
     url(r'^vender/$', 'aldrovanda.views.sell'),
+    url(r'^usuario/tienda/$', 'aldrovanda.views.user_shop'),
+    url(r'^usuario/producto/crear/$', 'aldrovanda.views.user_product'),
+    url(r'^usuario/tienda/add/$', 'aldrovanda.views.user_shop_add'),
+    url(r'^usuario/producto/add/$', 'aldrovanda.views.user_product_add'),
     #url(r'^register/', 'aldrovanda.views.register'),
     #url(r'^categoria/(?P<category_slug>.+?)/?$', 'aldrovanda.views.category'),
     #url(r'^categoria/(?P<category_parent>.+?)/(?P<category_slug>.+?)/?$', 'aldrovanda.views.category_lala')

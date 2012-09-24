@@ -99,13 +99,23 @@ class Material(models.Model):
 class Shop(models.Model):
 	name = models.CharField(max_length=50)
 	header = models.TextField()
-	user = models.ForeignKey(User, default = None, blank=False, null=False)
+	user = models.ForeignKey(UserDefault, default = None, blank=False, null=False)
 	class Meta:
 		verbose_name = "Tienda"
 		verbose_name_plural = "Tiendas"
 
 	def __unicode__(self):
 		return self.name
+class ShopSeccion(models.Model):
+	name = models.CharField(max_length=50)
+	shop = models.ForeignKey(Shop, default = None, blank=False, null=False)
+	class Meta:
+		verbose_name = 'Seccion de la tienda'
+		verbose_name_plural = 'Secciones de la tienda'
+
+	def __unicode__(self):
+		return self.name
+    
 class Product(models.Model):
 	name = models.CharField(
 		max_length = 150, 
@@ -130,10 +140,10 @@ class Product(models.Model):
 		default = 5
 	)
 	category = models.ForeignKey(Category)
-	shop = models.ForeignKey(Shop, default = None, blank=False, null=False)
+	shopSeccion = models.ForeignKey(ShopSeccion, default = None, blank=False, null=False)
 	tag = models.ManyToManyField(Tag, null=True)
 	material = models.ManyToManyField(Material, null=True)
-	style = models.ForeignKey(Style, null=True)
+	style = models.ManyToManyField(Style, null=True)
 	occasion = models.ForeignKey(Occasion, null=True)
 	recipient = models.ForeignKey(Recipient, null=True)
 	def get_absolute_url(self):

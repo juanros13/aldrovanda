@@ -1,0 +1,98 @@
+{% extends "aldrovanda/base.html" %}
+
+{% block title %}Selecciona el nombre de tu tienda{% endblock %}
+{% block header %}
+<div class="container" >
+  <div class="row-fluid">
+    <div class="span8" >
+      <a class="brand" href="{% url aldrovanda.views.index %}">Aldrovanda</a>
+    </div>
+    <div class="span4 pull-right" >
+      <div class="pull-right">
+        {{ user }} <a href="#">Logout</a> | <a href="#">Ayuda</a>
+      </div>
+      
+    </div>
+  </div>    
+</div>
+<div class="container" >
+  <ul class="steps">
+    <li class="step-1" >
+      <a href="/your/shops/lobo022000/name" class="tt-hover-b  completed" rel="tooltip" title="Choose a shop name.">
+        <div class="step-inner">
+          Shop Name<span class="completed-indicator"></span>
+        </div>
+      </a>
+      
+    </li>
+    <li class="step-2">
+      <a href="/your/listings/create" class="tt-hover-b active " rel="tooltip" title="What are you going to sell? Add and edit listings here.">
+        <div class="step-inner">
+          List Items<span class="completed-indicator"></span>
+        </div>
+      </a>
+    </li>
+    <li class="step-3">
+      <a href="/your/shops/lobo022000/payments" class="tt-hover-b  " rel="tooltip" title="Choose your shop payment methods.">
+        <div class="step-inner">
+            Get Paid<span class="completed-indicator"></span>
+        </div>
+      </a>
+    </li>
+    <li class="step-4">
+      <a href="/your/account/billing" class="tt-hover-b  "  rel="tooltip" title="Enter the credit card you want to use to pay your bill.">
+        <div class="step-inner">
+          Billing<span class="completed-indicator"></span>
+        </div>
+      </a>
+    </li>
+    <li class="step-5">
+      <a>
+        <div class="step-inner">
+          Open Shop
+          <span class="completed-indicator"></span>
+        </div>
+      </a>
+    </li>
+    <li class="preview">
+      <a class="tt-hover-b " href="/your/shops/lobo022000/preview" rel="tooltip" title="Preview your shop page.">
+        <div class="step-inner">
+          Preview
+        </div>
+      </a>
+    </li>
+  </ul>
+</div>
+{% endblock %}
+
+{% block body %}
+{% load mptt_tags %}
+<div class="container">
+  <div class="row">
+    
+    <div class="span10 offset1">
+      <form id="add-shop" name="add-shop" method="post"  action='../user_shop_add/'  class="form-horizontal">
+      <div class="well">
+        <div class="alert alert-error hide">
+        </div>
+        <div class="control-group">
+          <label class="control-label" for="input01"><strong>Nombre de la tienda</strong></label>
+          <div class="controls">
+            <input id="name-shop" name="shop" class="input-xxlarge" type="text" maxlength="100" />
+            <div id="error-content" >
+              <span class="help-block">Puedes cambiar el nombre de la tienda despues.</span>
+            </div>
+          </div>
+        </div>
+         <div class="control-group">
+            <div class="controls">
+              <button type="submit" id="btn-add-shop" name="btn-add-shop" class="btn btn-large btn-info" type="button">Guardar</button> 
+            </div>
+          </div>
+      </div>
+    </form>
+    </div><!--/span-->
+
+  </div><!--/row-->
+</div><!--/container-->
+{% endblock %}

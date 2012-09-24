@@ -8,6 +8,7 @@ from django.conf import settings
 from django.template import RequestContext
 from django.contrib.auth import authenticate, login as auth_login
 from django.views.decorators.http import require_POST
+from django.contrib.auth.decorators import permission_required, login_required
 from django.contrib.auth.models import User
 from django.contrib.auth import logout
 from django.utils import simplejson
@@ -285,20 +286,58 @@ def removeFavorite(request):
 	serialized = simplejson.dumps(to_return)
 	return HttpResponse(serialized, mimetype="application/json")
 
+
 def sell(request):
-	categories = Category.objects.filter(parent__isnull=True)
-	styles = Style.objects.all()
-	recipients = Recipient.objects.all()
-	occasions = Occasion.objects.all()
-	tags = Tag.objects.all()
+
+	#if not User.objects.filter(email=email, username=username).exists()
 	return render_to_response('aldrovanda/sell.html', {
-		'categories' : categories,
-		'styles' : styles,
-		'recipients' : recipients,
-		'occasions' : occasions,
-		'tags' : tags,
 	}, context_instance=RequestContext(request))
-	
+
+@login_required
+def user_shop(request):
+	if request.user.is_active:
+		return render_to_response('aldrovanda/user_add_shop.html', {
+		}, context_instance=RequestContext(request))
+	else:
+		return HttpResponseRedirect('/')
+
+@login_required
+def user_shop_add(request):
+
+	return render_to_response('aldrovanda/user_add_shop.html', {
+	}, context_instance=RequestContext(request))
+
+@login_required
+def user_product(request):
+	if request.user.is_authenticated():
+		if request.user.is_active:
+			shop = Shop.objects.filter(user=request.user)
+			if shop:
+				categories = Category.objects.filter(parent__isnull=True)
+				styles = Style.objects.all()
+				recipients = Recipient.objects.all()
+				occasions = Occasion.objects.all()
+				tags = Tag.objects.all()
+				return render_to_response('aldrovanda/user_add_product.html', {
+					'categories' : categories,
+					'styles' : styles,
+					'recipients' : recipients,
+					'occasions' : occasions,
+					'tags' : tags,
+				}, context_instance=RequestContext(request))
+			else:
+				return HttpResponseRedirect(reverse('aldrovanda.views.user_shop'))
+		else:
+			return HttpResponseRedirect('/')
+	else:
+		return HttpResponseRedirect(reverse('aldrovanda.views.sell'))
+
+@login_required
+def user_product_add(request):
+
+	return render_to_response('aldrovanda/user_add_shop.html', {
+	}, context_instance=RequestContext(request))
+
 @require_POST
 def uploadImage(request):
 	print request.FILES
