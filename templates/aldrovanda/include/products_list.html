@@ -1,16 +1,17 @@
-<!-- Mostrando los productos (16) -->
+<!-- Mostrando los items (16) -->
 {% load thumbnail %}
 {% load i18n %}
-{% for product in products_list.object_list %}
-  {% if forloop.counter == 1 %}
+{% if items_list.object_list %}
+  {% for item in items_list.object_list %}
+    {% if forloop.counter == 1 %}
 <div class="row-fluid">
-  {% endif %}
+    {% endif %}
   <div class="span3">
     <div class="thumbnail">
-      {% for image in product.image_set.all %}
+      {% for image in item.image_set.all %}
       {% if image.default %}
-        <a href="{{ product.get_absolute_url }}"  title="{{ product.description }}">
-          <img src="{% thumbnail image.image 280x160 crop %}" width="280" height="160" />
+        <a href="{{ item.get_absolute_url }}"  title="{{ item.name }}">
+          <img src="{% thumbnail image.image 320x180 crop %}" width="320" height="180" />
         </a>
       {% endif %}
       {% endfor %}
@@ -18,26 +19,26 @@
         <div class="row-fluid">
           <div class="span12">
             <h3><small>
-              <a class="listing-title" href="{{ product.get_absolute_url }}" title="{{ product.name }}" >
-              {{ product.name|truncatechars:30 }}
+              <a class="listing-title" href="{{ item.get_absolute_url }}" title="{{ item.name }}" >
+              {{ item.name|truncatechars:30 }}
               </a></small>
             </h3>
           </div>
         </div>
         <div class="row-fluid">    
           <div class="span7 listing-maker">
-            <a href="/tienda/{{ product.user }}" title="Check out {{ product.user }} shop" >
-            {{ product.user|truncatechars:20 }}
+            <a href="{{ item.shop.get_absolute_url }}" title="Check out {{ item.user }} shop" >
+            {{ item.shop|truncatechars:13 }}
             </a>
           </div>
           <div class="span5 listing-price">
-            <span class="currency-symbol">&euro;</span>{{ product.price }}<span class="currency-code">EUR</span>
+            <span class="currency-symbol">&euro;</span>{{ item.price }}<span class="currency-code">EUR</span>
           </div>
         </div>
       </div> 
     </div>  
   </div><!--/span -->
-  {% if products_list.object_list|length == forloop.counter %}
+  {% if items_list.object_list|length == forloop.counter %}
 </div><!--/row --> 
   {% elif forloop.counter|divisibleby:"4"  %}
 </div><!--/row --> 
@@ -47,23 +48,30 @@
 <div class="row-fluid">
   <div class="pagination pull-right">
     <ul>
-    {% if products_list.has_previous %}
-      <li><a href="?page={{ products_list.previous_page_number }}">Prev</a></li>
+    {% if items_list.has_previous %}
+      <li><a href="?page={{ items_list.previous_page_number }}">Prev</a></li>
     {% endif %}
-    {% for page in products_list.pages  %}
+    {% for page in items_list.pages  %}
         {% if page %}
-            {% ifequal page products_list.number %}
+          {% if items_list.has_next %}
+            {% ifequal page items_list.number %}
                 <li class="active"><a href="#">{{ page }}</a></li>
             {% else %}
                 <li><a href="?page={{ page }}{{ getvars }}{{ hashtag }}" class="page">{{ page }}</a></li>
             {% endifequal %}
+          {% endif %}
         {% else %}
             ...
         {% endif %}
     {% endfor %}
-    {% if products_list.has_next %}
-      <li><a href="?page={{ products_list.next_page_number }}">Next</a></li>
+    {% if items_list.has_next %}
+      <li><a href="?page={{ items_list.next_page_number }}">Next</a></li>
     {% endif %}
     </ul>
   </div>
 </div>
+{% else %}
+<div class="span12">
+  <h2>No se encuentran Items para esta seccion.</h2>
+</div>
+{% endif %}

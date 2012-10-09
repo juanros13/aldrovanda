@@ -1,0 +1,68 @@
+
+{% extends "aldrovanda/base.html" %}
+{% load thumbnail %}
+{% load i18n %}
+{% block body %}
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div class="span3">
+      {% if shop_seccion %}
+      <ul class="nav nav-list bs-docs-sidenav">
+        <li><a href="{{ shop.get_absolute_url }}"><i class="icon-chevron-right"></i>Shop Home</a></li>
+        {% for seccion in shop_seccion %}
+          {% ifequal seccion.get_absolute_url current_path %}
+        <li class="active">
+          {% else %}
+        <li>
+          {% endifequal %}
+          <a href="{{ seccion.get_absolute_url }}">{{ seccion.get_absulte_url }}<i class="icon-chevron-right"></i>{{ seccion.name }}</a>
+        </li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+      <div class="row-fluid">
+        <div class="span12">
+          <div class="well well-small">
+            <h5>Propietario de la tienda</h5>
+            <a href="{{ shop.get_absolute_url }}"  title="{{ shop.name }}">
+              <img src="{% thumbnail user.get_profile.photo 320x180 crop %}" width="320" height="180" />
+            </a>
+            {{ user.username }}
+            {{ user.get_profile.country }}
+            {{ user.get_profile.state }}
+            {{ user.get_profile.city }}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="span9">
+      <div class="row-fluid">
+        <div class="span12">
+          <a href="{{ shop.get_absolute_url }}"  title="{{ shop.name }}">
+            <img src="{% thumbnail shop.banner 1024x160 crop %}" width="1024" height="160" />
+          </a>
+        </div>
+      </div>
+      <div class="row-fluid">
+        <div class="span12">
+          <div class="navbar">
+            <div class="navbar-inner">
+              <form class="navbar-form pull-left">
+                <input type="text" class="input-large">
+                <button type="submit" class="btn btn-info">Buscar</button>
+              </form>
+            </div>
+          </div>
+        </div>  
+      </div>
+      {% include "aldrovanda/include/products_list_featured.html" %}
+      <div class="row-fluid">
+        <div class="span12">
+          <legend>Ultimos productos</legend>
+        </div>
+      </div>
+      {% include "aldrovanda/include/products_list.html" %}
+    </div><!--/span9-->
+  </div><!--/row-->
+</div> <!-- /container -->
+{% endblock %}

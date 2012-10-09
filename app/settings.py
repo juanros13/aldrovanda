@@ -127,9 +127,16 @@ INSTALLED_APPS = (
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
     'aldrovanda',
+    'items',
+    'users',
+    'hierarchy',
+    'favorites',
+    'sell',
+    'shops',
     'easy_thumbnails',
     'mptt',
     'south',
+    'feincms', 
 )
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
@@ -153,7 +160,7 @@ LOGGING = {
         },
     }
 }
-AUTH_PROFILE_MODULE = 'accounts.UserDefault'
+AUTH_PROFILE_MODULE = 'users.UserDefault'
 
 PAGINATION_SETTINGS = {
     'PAGE_RANGE_DISPLAYED': 10,

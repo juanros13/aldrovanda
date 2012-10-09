@@ -1,0 +1,12 @@
+{% extends "aldrovanda/base.html" %}
+
+{% block title %}Selecciona el nombre de tu tienda{% endblock %}
+
+{% block body %}
+{% if user.is_authenticated %}
+  {% include "aldrovanda/include/sell_with_login.html" %}
+{% else %}
+  {% include "aldrovanda/include/sell_without_login.html" %}
+{% endif %}
+
+{% endblock %}

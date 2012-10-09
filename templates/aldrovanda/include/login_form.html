@@ -10,9 +10,12 @@
   </div>
   <div class="tab-content">
     <div class="tab-pane active" id="Login">
-      <form action="/login/" method="post" class="form-horizontal" id="id-login-form">{% csrf_token %}
+      <form action="{% url users.views.login %}" method="post" class="form-horizontal" id="id-login-form">
         <fieldset>
-          <div class="alert alert-error hide">
+          <div class="row-fluid">
+            <div class="span10 offset1">
+              <div class="alert alert-error hide"></div>
+            </div>
           </div>
           <div class="control-group">
             <label class="control-label">Usuario o Correo</label>
@@ -44,8 +47,13 @@
       </form>
     </div>
     <div class="tab-pane" id="Registrarse">
-      <form action="/register/" method="post" class="form-horizontal" id="id-register-form">{% csrf_token %}
+      <form action="{% url users.views.register %}" method="post" class="form-horizontal" id="id-register-form">
         <fieldset>
+          <div class="row-fluid">
+            <div class="span10 offset1">
+              <div class="alert alert-error hide"></div>
+            </div>
+          </div>
           <div class="control-group">
             <label class="control-label">Nombre</label>
             <div class="controls">
@@ -73,7 +81,7 @@
           <div class="control-group">
             <label class="control-label">Confirma el Password</label>
             <div class="controls">
-               <input id="id_repeat" name="password_repeat" type="password" class="span3">
+               <input id="id_password_repeat" name="password_repeat" type="password" class="span3">
             </div>
           </div>
           <div class="control-group">

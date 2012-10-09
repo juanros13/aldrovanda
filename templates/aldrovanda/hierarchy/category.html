@@ -1,0 +1,62 @@
+{% extends "aldrovanda/base.html" %}
+
+{% block title %}Aldrovanda - {{ current_category.name }}{% endblock %}
+
+{% block body %}
+<div class="container">
+	<div class="row">
+		<div class="span9">
+      {{ level }}
+			<ul class="breadcrumb">
+        <li>
+        {% for cat in category.get_ancestors %}
+          <a href="{{ cat.get_absolute_url }}">
+          {{ cat.name }}
+          </a>
+          <span class="separator">&rsaquo;</span> 
+        {% endfor %}
+        </li>
+        <li>
+          <a href="{{ category.get_absolute_url }}">
+          {{category.name}}
+          </a>
+        </li>
+      </ul>
+     {% include "aldrovanda/include/products_list.html" %}
+		</div><!--/span-->
+		<div class="span3">
+			<div class="well sidebar-nav">
+				<ul class="nav nav-list">
+					<li class="nav-header">
+							<h4>{{ category.get_root }}</h4>
+					</li>
+					{% for cat in categories_sibling %}
+						{% if cat.slug == category.parent.slug or cat.slug == category.slug %}
+						<li {% if cat.slug == category.slug %}class="active"{% endif %}>
+							<a href="{{ cat.get_absolute_url }}">{{cat.name}}</a>
+						</li>
+							{% if cat.children.count %}
+							<li>	
+								<ul class="nav nav-list">
+									{% for child in cat.children.all %}
+									<li {% if child.slug == category.slug %}class="active"{% endif %}>
+										<a href="{{ child.get_absolute_url }}">{{ child }}</a>
+									</li>
+									{% endfor %}
+								</ul>
+							</li>	
+							{% endif %}
+						{% else %}	
+						<li>
+							<a href="{{cat.get_absolute_url}}">{{cat.name}}</a>
+						</li>
+						{% endif %}
+
+						
+					{% endfor %}
+				</ul>
+			</div><!--/.well -->
+		</div><!--/span-->
+	</div><!--/row-->
+</div><!--/container-->
+{% endblock %}
