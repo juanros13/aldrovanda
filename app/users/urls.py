@@ -17,6 +17,8 @@ urlpatterns = patterns('users.views',
     url(r'^login/$', 'login'),
     url(r'^register/$', 'register'),
     url(r'^logout/$', 'disconnect'),
+    url(r'^confirm/$', 'confirm'),
+    url(r'^test/$', 'test'),
 
 )+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
  

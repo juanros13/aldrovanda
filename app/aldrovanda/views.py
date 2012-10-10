@@ -28,8 +28,12 @@ def index(request):
 	#latest_products_list = Product.objects.filter(image__default=True).order_by('-creation_date')[:8]
 	items = Item.objects.filter(image__default=True).order_by('-creation_date')
 	paginator = Paginator(items, 12) # Show 25 contacts per page
+	print request.session
+	message = ''
+	if request.session.get('_info_message'):
+		message = request.session.get('_info_message')
+	request.session['_info_message'] = ''
 
-	
 	try:
 		page = request.GET.get('page', 1)
 	except PageNotAnInteger:
@@ -63,6 +67,7 @@ def index(request):
 							 	{
 									'items_list': items_list,
 									'category_list': category_list,
+									'message': message,
 								}, context_instance=RequestContext(request))
 
 
