@@ -18,6 +18,10 @@ urlpatterns = patterns('users.views',
     url(r'^register/$', 'register'),
     url(r'^logout/$', 'disconnect'),
     url(r'^confirm/$', 'confirm'),
+    url(r'^recuperar_clave/$', 'pass_recovery'),
+    url(r'^olvide_mi_clave/$', 'forgot_password'),
+    url(r'^forgot_password_send_mail/$', 'forgot_password_send_mail'),
+    url(r'^save_password/$', 'pass_recovery_save'),
     url(r'^test/$', 'test'),
 
 )+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

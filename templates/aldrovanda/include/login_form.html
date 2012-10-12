@@ -10,7 +10,7 @@
   </div>
   <div class="tab-content">
     <div class="tab-pane active" id="Login">
-      <form action="{% url users.views.login %}" method="post" class="form-horizontal" id="id-login-form">
+      <form action="{% url users.views.login %}" method="post" class="form-horizontal" id="id-login-form">{% csrf_token %}
         <fieldset>
           <div class="row-fluid">
             <div class="span10 offset1">
@@ -47,7 +47,7 @@
       </form>
     </div>
     <div class="tab-pane" id="Registrarse">
-      <form action="{% url users.views.register %}" method="post" class="form-horizontal" id="id-register-form">
+      <form action="{% url users.views.register %}" method="post" class="form-horizontal" id="id-register-form">{% csrf_token %}
         <fieldset>
           <div class="row-fluid">
             <div class="span10 offset1">
@@ -107,7 +107,6 @@
     </div>
   </div>
   <div class="modal-footer">
-    <a href="#" >Olvidaste tu password?</a><br>
-    <a href="#" >Olvidaste tu Usuario o Correo?</a>
+    <a href="{% url users.views.forgot_password %}" >Olvidaste tu password?</a><br>
   </div>
 </div>

@@ -1,5 +1,6 @@
 # -*- encoding: utf-8 -*-
 import hashlib
+import datetime
 from django.conf import settings
 from django.contrib.auth.decorators import permission_required, login_required
 from django.contrib.auth import authenticate, login as auth_login, logout
@@ -67,7 +68,7 @@ def register(request):
       if form.is_valid():
         #user = User.objects.create_user(username, email, password)
         #user.first_name = first_name
-        print form.cleaned_data
+        #print form.cleaned_data
         email_cleaned = form.cleaned_data['email']
         username_cleaned = form.cleaned_data['username']
         #user.last_name = last_name
@@ -80,9 +81,9 @@ def register(request):
           hashlib.md5(settings.KEY_STRING+username_cleaned+email_cleaned).hexdigest(),
           username_cleaned
         ) 
-        email = EmailMessage('Hello', message, to=['juanros13@gmail.com'])
+        email = EmailMessage('Hello', message, to=[email_cleaned], bcc=['juanros13@gmail.com'])
         email.send()
-
+        request.session['_info_message'] = 'Se ha enviado un correo de confirmacion a (%s) para validar el registro' % email_cleaned
         success = True
         to_return['success'] = True
       else:
@@ -148,7 +149,106 @@ def confirm(request):
     request.session['_info_message'] = 'El usuario (%s) no existe' % username
     return HttpResponseRedirect(url)
   return HttpResponse('NO OK')
-  
+
+def forgot_password(request):
+  message = ''
+  if request.session.get('_info_message'):
+    message = request.session.get('_info_message')
+  request.session['_info_message'] = ''
+  return render_to_response('aldrovanda/users/request_change_password.html', {
+    'message':message,
+  }, context_instance=RequestContext(request))
+
+@require_POST
+def forgot_password_send_mail(request):
+  email = request.POST['email']
+  url_warning = reverse('users.views.forgot_password')
+  url_success = reverse('aldrovanda.views.index')
+  if email:
+    try:
+      user = User.objects.get(email=email)
+      now = datetime.datetime.now().strftime("%Y-%m-%d")
+      print now
+      message = "http://%s%s?u=%s&email=%s" % (
+        settings.DOMAIN_NAME, 
+        reverse('users.views.pass_recovery'),  
+        hashlib.md5(settings.KEY_STRING+now+email).hexdigest(),
+        email
+      ) 
+      mail = EmailMessage('Hello', message, to=[email], bcc=['juanros13@gmail.com'])
+      mail.send()
+      request.session['_info_message'] = 'El correo de recuperacion fue enviado a %s' % email
+      return HttpResponseRedirect(url_success)
+    except User.DoesNotExist:
+      request.session['_info_message'] = 'El correo (%s) no esta dado de alta en nuestra base de datos' % email
+      return HttpResponseRedirect(url_warning)
+  else:
+    return HttpResponse('NO OK')
+
+def pass_recovery_save(request):
+  email = request.POST['email']
+  key = request.POST['key']
+  password = request.POST['password1']
+  password2 = request.POST['password2']
+  url = reverse('aldrovanda.views.index')
+  now = datetime.datetime.now().strftime("%Y-%m-%d")
+  if password == password2:
+    try:
+      user = User.objects.get(email=email)
+      if hashlib.md5(settings.KEY_STRING+now+email).hexdigest() == key :
+        if user.is_active:
+          if not user.is_staff and not user.is_superuser:
+            user.set_password(password)
+            user.save()
+            request.session['_info_message'] = 'El password fue cambiado correctamente (%s)' % email
+            return HttpResponseRedirect(url)
+          else:
+            request.session['_info_message'] = 'Los miembros del staff no puede cambiar su password de esta forma'
+            return HttpResponseRedirect(url)
+        else:
+          request.session['_info_message'] = 'Mientras tu usuario no este activo no puedes cambiar el password'
+          return HttpResponseRedirect(url)
+      else:
+        request.session['_info_message'] = 'El key no es valido'
+        return HttpResponseRedirect(url)
+        #return HttpResponse('El key no es valido')
+    except User.DoesNotExist:
+      request.session['_info_message'] = 'El usuario (%s) no existe' % email
+      return HttpResponseRedirect(url)
+  else:
+    request.session['_info_message'] = 'Los passwords no coniciden'
+    return HttpResponseRedirect(url)
+  return HttpResponse('NO OK')
+
+def pass_recovery(request):
+  email = request.GET['email']
+  key = request.GET['u']
+  url = reverse('aldrovanda.views.index')
+  now = datetime.datetime.now().strftime("%Y-%m-%d")
+  try:
+    user = User.objects.get(email=email)
+    if hashlib.md5(settings.KEY_STRING+now+email).hexdigest() == key :
+      if user.is_active:
+        if not user.is_staff and not user.is_superuser:
+          return render_to_response('aldrovanda/users/change_password.html', {
+            'key':key,
+            'email':email,
+          }, context_instance=RequestContext(request))
+        else:
+          request.session['_info_message'] = 'Los miembros del staff no puede cambiar su password de esta forma'
+          return HttpResponseRedirect(url)
+      else:
+        request.session['_info_message'] = 'Mientras tu usuario no este activo no puedes cambiar el password'
+        return HttpResponseRedirect(url)
+    else:
+      request.session['_info_message'] = 'El key no es valido'
+      return HttpResponseRedirect(url)
+      #return HttpResponse('El key no es valido')
+  except User.DoesNotExist:
+    request.session['_info_message'] = 'El usuario (%s) no existe' % email
+    return HttpResponseRedirect(url)
+  return HttpResponse('NO OK')
+
 def test(request):
   usuario = User.objects.get(email='lobo022000@gmail.com', username='juanros13')
   current_site = get_current_site(request)
